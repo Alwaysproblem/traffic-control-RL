@@ -19,6 +19,25 @@ class traffic_lights(tk.Tk,object):
     def Exit(self):
         self.destroy()
 
+    def build_set_menu(self):
+        j=1
+        speed=['5','10','15','20','25']
+        self.Set=tk.Toplevel()
+        self.Set.title('Set')
+        self.Set.geometry('400x300')
+
+        self.Set.menubutton_1=tk.Menubutton(self.Set,text='speed')
+        self.Set.menubutton_1.menu=tk.Menu(self.Set.menubutton_1)
+        self.Set.menubutton_1.pack()
+
+        self.Set.user_choice = tk.IntVar()
+        self.Set.user_choice.set(1)
+        self.Set.file_menu=tk.Menu(self.Set.menubutton_1,tearoff=0)
+        for i in speed :
+            self.Set.file_menu.add_radiobutton(label=i,variable=self.Set.user_choice,value=j)
+            j+=1
+        self.Set.menubutton_1.config(menu=self.Set.file_menu)
+
     def build_menu(self):
         self.menubar=tk.Menu(self)
 
@@ -29,7 +48,7 @@ class traffic_lights(tk.Tk,object):
         self.menubar.add_cascade(label="Menu",menu=self.filemenu)
 
         self.setmenu = tk.Menu(self.menubar,tearoff=0)
-        self.setmenu.add_command(label="Set",command=self.Exit)
+        self.setmenu.add_command(label="Set",command=self.build_set_menu)
         self.menubar.add_cascade(label="Control",menu=self.setmenu)
         self.config(menu=self.menubar)
     
