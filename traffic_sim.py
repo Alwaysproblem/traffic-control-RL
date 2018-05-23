@@ -172,7 +172,7 @@ class traffic_lights(tk.Tk,object):
                             i[1].x1+=self.speed
                             i[1].x2+=self.speed
                             if(i[1].x2>=500):
-                                self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))
+                                self.canvas.coords(i[0],(500,i[1].y1,i[1].x2,i[1].y2))
                                 self.canvas.delete(i)
                                 self.car.remove(i)
                             else:
