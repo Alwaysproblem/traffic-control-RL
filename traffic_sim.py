@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import sys
+import random
 
 if sys.version_info.major==2:
     import Tkinter as tk
@@ -11,41 +12,45 @@ else:
 class traffic_lights(tk.Tk,object):
     def __init__(self):
         super(traffic_lights, self).__init__()
+        self.change=1
         self.title('traffic_lights')
         self.geometry("500x500")
         self.build_menu()
         self.Cross_street()
-        self.Car()
+        self.lights()
         self.canvas.pack()
-        self.move_car()
 
     def Exit(self):
         self.destroy()
 
     def build_set_menu(self):
         j=1
-        speed=['5','10','15','20','25']
+        speed=['10','20','30','40']
         self.Set=tk.Toplevel()
         self.Set.title('Set')
         self.Set.geometry('400x300')
 
-        self.Set.menubutton_1=tk.Menubutton(self.Set,text='speed')
+        self.Set.menubutton_1=tk.Menubutton(self.Set,text='speed',relief='raised')
         self.Set.menubutton_1.menu=tk.Menu(self.Set.menubutton_1)
         self.Set.menubutton_1.pack()
 
         self.Set.user_choice = tk.IntVar()
-        self.Set.user_choice.set(1)
+ 
         self.Set.file_menu=tk.Menu(self.Set.menubutton_1,tearoff=0)
         for i in speed :
-            self.Set.file_menu.add_radiobutton(label=i,variable=self.Set.user_choice,value=j)
+            self.S=self.Set.file_menu.add_radiobutton(label=i,variable=self.Set.user_choice,value=i,command=self.get_speed)
             j+=1
         self.Set.menubutton_1.config(menu=self.Set.file_menu)
+    
+    def get_speed(self):
+        self.speed=self.Set.user_choice.get()
+
 
     def build_menu(self):
         self.menubar=tk.Menu(self)
 
         self.filemenu=tk.Menu(self.menubar,tearoff=0)
-        self.filemenu.add_command(label="Start",command=self.Exit)
+        self.filemenu.add_command(label="Start",command=self.Car)
         self.filemenu.add_command(label="Pause",command=self.Exit)
         self.filemenu.add_command(label="Exit",command=self.Exit)
         self.menubar.add_cascade(label="Menu",menu=self.filemenu)
@@ -66,29 +71,124 @@ class traffic_lights(tk.Tk,object):
         self.canvas.create_line(275,500,275,275)
         self.canvas.create_line(500,275,275,275)
 
+    def lights(self):
+        self.light_1=self.canvas.create_rectangle(235,225,265,215,fill='gray')
+        self.light_2=self.canvas.create_rectangle(215,235,225,265,fill='gray')
+        self.light_3=self.canvas.create_rectangle(275,235,285,265,fill='gray')
+        self.light_1=self.canvas.create_rectangle(235,275,265,285,fill='gray')
+
+        self.red_1=self.canvas.create_oval(235,225,245,215,fill='red')
+        self.red_2=self.canvas.create_oval(215,255,225,265,fill='gray')
+        self.red_3=self.canvas.create_oval(275,235,285,245,fill='gray')
+        self.red_4=self.canvas.create_oval(255,275,265,285,fill='red')
+
+        self.green_1=self.canvas.create_oval(255,225,265,215,fill='gray')
+        self.green_2=self.canvas.create_oval(215,235,225,245,fill='green')
+        self.green_3=self.canvas.create_oval(275,255,285,265,fill='green')
+        self.green_4=self.canvas.create_oval(235,275,245,285,fill='gray')
+
+    def light_change(self):
+            if self.change ==1:
+                self.canvas.itemconfig(self.green_1,fill = 'green')
+                self.canvas.itemconfig(self.green_2,fill = 'gray')
+                self.canvas.itemconfig(self.green_3,fill = 'gray')
+                self.canvas.itemconfig(self.green_4,fill = 'green')
+
+                self.canvas.itemconfig(self.red_1,fill = 'gray')
+                self.canvas.itemconfig(self.red_2,fill = 'red')
+                self.canvas.itemconfig(self.red_3,fill = 'red')
+                self.canvas.itemconfig(self.red_4,fill = 'gray')
+                self.change =0
+            else:
+                self.canvas.itemconfig(self.green_1,fill = 'gray')
+                self.canvas.itemconfig(self.green_2,fill = 'green')
+                self.canvas.itemconfig(self.green_3,fill = 'green')
+                self.canvas.itemconfig(self.green_4,fill = 'gray')
+
+                self.canvas.itemconfig(self.red_1,fill = 'red')
+                self.canvas.itemconfig(self.red_2,fill = 'gray')
+                self.canvas.itemconfig(self.red_3,fill = 'gray')
+                self.canvas.itemconfig(self.red_4,fill = 'red')
+                self.change =1
+
+
+
     def Car(self):
+        self.car=[]
+        self.count=0
+        self.speed=10
+        while(True):
+            if self.car==[]:
+                self.car_1=create_car_up()
+                self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
+                self.car.append([self.car1,self.car_1])
+
+                self.car_2=create_car_left()
+                self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
+                self.car.append([self.car2,self.car_2])
+            for i in self.car:
+                if (i[1].x1==245 and i[1].x2==255):
+                    self.color_1 = self.canvas.itemcget(self.red_1, 'fill')
+                    if (self.color_1=='red'and i[1].y1+self.speed>=215 and i[1].y1<=215):
+                        i[1].y1+=0
+                        i[1].y2+=0
+                        self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+                    else:
+                        i[1].y1+=self.speed
+                        i[1].y2+=self.speed
+                        if(i[1].y2>=500):
+                            self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))
+                            self.canvas.delete(i)
+                            self.car.remove(i)
+                        else:
+                            self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+
+                if (i[1].y1==245  and i[1].y2==255):
+                    self.color_2 = self.canvas.itemcget(self.red_2, 'fill')
+                    if (self.color_2=="red"and i[1].x1+self.speed>=215 and i[1].x1<=215):
+                        i[1].x1+=0
+                        i[1].x2+=0
+                        self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+                    else:
+                        i[1].x1+=self.speed
+                        i[1].x2+=self.speed                       
+                        if(i[1].x2>=500):
+                            self.canvas.coords(i[0],(500,i[1].y1,i[1].x2,i[1].y2))
+                            self.canvas.delete(i)
+                            self.car.remove(i)
+                        else:
+                            self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+            if (self.count%3==0):
+                if  random.random()>0.5:
+                    self.car_1=create_car_up()
+                    self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
+                    self.car.append([self.car1,self.car_1])
+            if(self.count%4==0):
+                if random.random()>0.5:
+                    self.car_2=create_car_left()
+                    self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
+                    self.car.append([self.car2,self.car_2])
+
+            self.count+=1
+            if (self.count % 24==0):
+                self.light_change()
+            self.update()
+            time.sleep(0.5)
+            
+
+class create_car_up(object):
+    def __init__(self):
         self.x1=245
         self.x2=255
         self.y1=0
         self.y2=10
-        self.x3=0
-        self.x4=10
-        self.y3=245
-        self.y4=255
-        self.Car_1 = self.canvas.create_rectangle(self.x1,self.y1,self.x2,self.y2,fill='black')
 
-    def move_car(self):
-        for self.vector in range(0,20):
-            self.canvas.coords(self.Car_1,(self.x1,self.y1,self.x2,self.y2))
-            self.canvas.coords(self.Car_2,(self.x3,self.y3,self.x4,self.y4))
-            self.update()
-            self.y1+=25
-            self.y2+=25
-            self.x3+=25
-            self.x4+=25
-            time.sleep(0.5) 
-
-    
+class create_car_left(object):
+    def __init__(self):
+        self.x1=0
+        self.x2=10
+        self.y1=245
+        self.y2=255
 
 if __name__ == '__main__':
     env = traffic_lights()
