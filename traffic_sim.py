@@ -51,7 +51,6 @@ class traffic_lights(tk.Tk,object):
 
         self.filemenu=tk.Menu(self.menubar,tearoff=0)
         self.filemenu.add_command(label="Start",command=self.Car)
-        self.filemenu.add_command(label="Pause",command=self.Exit)
         self.filemenu.add_command(label="Exit",command=self.Exit)
         self.menubar.add_cascade(label="Menu",menu=self.filemenu)
 
@@ -126,22 +125,34 @@ class traffic_lights(tk.Tk,object):
                 self.car_2=create_car_left()
                 self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
                 self.car.append([self.car2,self.car_2])
+
             for i in self.car:
+                self.crash=0
                 if (i[1].x1==245 and i[1].x2==255):
                     self.color_1 = self.canvas.itemcget(self.red_1, 'fill')
                     if (self.color_1=='red'and i[1].y1+self.speed>=215 and i[1].y1<=215):
                         i[1].y1+=0
                         i[1].y2+=0
-                        self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
                     else:
-                        i[1].y1+=self.speed
-                        i[1].y2+=self.speed
-                        if(i[1].y2>=500):
-                            self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))
-                            self.canvas.delete(i)
-                            self.car.remove(i)
+                        for j in self.car:
+                            if (j!=i and j[1].x1==245 and j[1].x2==255):
+                                if (i[1].y2+self.speed >j[1].y1 and i[1].y2<=j[1].y1):
+                                    self.crash=1
+                                    break
+
+                        if self.crash==0:
+                            i[1].y1+=self.speed
+                            i[1].y2+=self.speed
+                            if(i[1].y2>=500):
+                                self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))
+                                self.canvas.delete(i)
+                                self.car.remove(i)
+                            else:
+                                self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
                         else:
-                            self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+                            i[1].y1+=0
+                            i[1].y2+=0
+
 
                 if (i[1].y1==245  and i[1].y2==255):
                     self.color_2 = self.canvas.itemcget(self.red_2, 'fill')
@@ -150,20 +161,31 @@ class traffic_lights(tk.Tk,object):
                         i[1].x2+=0
                         self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
                     else:
-                        i[1].x1+=self.speed
-                        i[1].x2+=self.speed                       
-                        if(i[1].x2>=500):
-                            self.canvas.coords(i[0],(500,i[1].y1,i[1].x2,i[1].y2))
-                            self.canvas.delete(i)
-                            self.car.remove(i)
+                        for j in self.car:
+                            if (j!=i and j[1].y1==245 and j[1].y2==255):
+                                if (i[1].x2+self.speed >j[1].x1 and i[1].x2<=j[1].x1):
+                                    self.crash=1
+                                    break
+
+                        if self.crash==0:
+                            i[1].x1+=self.speed
+                            i[1].x2+=self.speed
+                            if(i[1].x2>=500):
+                                self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))
+                                self.canvas.delete(i)
+                                self.car.remove(i)
+                            else:
+                                self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
                         else:
-                            self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+                            i[1].x1+=0
+                            i[1].x2+=0
+
             if (self.count%3==0):
                 if  random.random()>0.5:
                     self.car_1=create_car_up()
                     self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
                     self.car.append([self.car1,self.car_1])
-            if(self.count%4==0):
+            if(self.count%2==0):
                 if random.random()>0.5:
                     self.car_2=create_car_left()
                     self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
