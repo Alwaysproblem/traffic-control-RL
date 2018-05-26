@@ -68,29 +68,29 @@ class Vehicle:
     
     def up(self):
         """ calculate the postion of the car from the upper bound."""
-        self.x1 = 0
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
+        self.x1 = (self.mapSize//2 + self.road//4)*self.unit
+        self.x2 = (self.mapSize//2 + self.road//4 + 1)*self.unit
+        self.y1 = (self.mapSize)*self.unit
+        self.y2 = (self.mapSize - 1)*self.unit
 
     def down(self):
-        self.x1 = 0
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
+        self.x1 = (self.mapSize//2 - self.road//4 - 1)*self.unit
+        self.x2 = (self.mapSize//2 - self.road//4)*self.unit
+        self.y1 = 1*self.unit
+        self.y2 = 0*self.unit
 
     def left(self):
-        self.x1 = 1
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
+        self.x1 = 0*self.unit
+        self.x2 = 1*self.unit
+        self.y1 = (self.mapSize//2 + self.road//4 + 1)*self.unit
+        self.y2 = (self.mapSize//2 + self.road//4)*self.unit
 
     def right(self):
-        self.x1 = 0
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
-
+        self.x1 = 1*self.unit
+        self.x2 = 0*self.unit
+        self.y1 = (self.mapSize//2 - self.road//4)*self.unit
+        self.y2 = (self.mapSize//2 - self.road//4 - 1)*self.unit
+    
     def create(self):
         if self.can != None:
             self.can_id = self.can.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = self.color[self.loc])
