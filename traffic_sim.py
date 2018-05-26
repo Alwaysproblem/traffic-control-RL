@@ -114,6 +114,18 @@ class light:
             else:
                 return self.sp, point(self.sp.x + self.length, self.sp.y + round(self.width / 3))
 
+    def getFlagState(self):
+        return self.changeFlag
+
+    def draw(self):
+        self.can.create_rectangle(self.sp.x,self.sp.y,self.ep.x,self.ep.y,fill = 'gray')
+        point_a,point_b = self.cal_R_cod()
+        self.red = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'red')
+        point_a,point_b = self.cal_Y_cod()
+        self.yellow = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'yellow')
+        point_a,point_b = self.cal_G_cod()
+        self.green = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'green')
+
     def _Change(self, color):
         self.changeFlag = not self.changeFlag
         dic = {
@@ -121,20 +133,11 @@ class light:
             'yellow': self.yellow,
             'green': self.green
         }
-        self.can.itemconfig(self.red,fill = 'gray')
-        self.red
-
-    def getFlagState(self):
-        return self.changeFlag
-
-    def draw(self):
-        self.can.create_rectangle(self.sp.x,self.sp.y,self.ep.x,self.ep.y,fill = 'gray')
-        point_a,point_b = self.cal_R_cod()
-        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'red')
-        point_a,point_b = self.cal_Y_cod()
-        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'yellow')
-        point_a,point_b = self.cal_G_cod()
-        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'green')
+        for i in dic.keys():
+            if i == color:
+                self.can.itemconfig(dic[i],fill = color)
+            else:
+                self.can.itemconfig(dic[i], fill = 'gray')
 
 
 
