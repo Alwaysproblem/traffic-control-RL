@@ -33,7 +33,7 @@ class point:
         return self.x, self.y
 
 class Vehicle:
-    def __init__(self, position, Canvas, UNIT = 10, size = 100, RoadWidth = 12):
+    def __init__(self, location, Canvas = None, UNIT = 10, size = 100, RoadWidth = 12):
         dire = {
             'up': 'down',
             'down': 'up',
@@ -41,14 +41,14 @@ class Vehicle:
             'right': 'left'
         }
         self.mapSize = size
-        self.pos = position                     # the car initial position
-        self.direction = dire[position]         # the direction of moving
+        self.loc = location                     # the car initial location
+        self.direction = dire[self.loc]         # the direction of moving
         self.x1 = 0
         self.x2 = 0
         self.y1 = 0
         self.y2 = 0
-        self.road = RoadWidth
         self.can_id = None
+        self.road = RoadWidth
         self.can = Canvas
         self.unit = UNIT
         func = {
@@ -63,7 +63,8 @@ class Vehicle:
             'left': 'blue4',
             'right': 'deep pink'
         }
-        func[self.direction]()
+        func[self.loc]()
+        self.create()
     
     def up(self):
         """ calculate the postion of the car from the upper bound."""
@@ -71,7 +72,6 @@ class Vehicle:
         self.x2 = (self.mapSize//2 + self.road//4 + 1)*self.unit
         self.y1 = (self.mapSize)*self.unit
         self.y2 = (self.mapSize - 1)*self.unit
-        self.can_id = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
 
     def down(self):
         self.x1 = (self.mapSize//2 - self.road//4 - 1)*self.unit
@@ -92,7 +92,8 @@ class Vehicle:
         self.y2 = (self.mapSize//2 - self.road//4 - 1)*self.unit
     
     def create(self):
-        pass
+        if self.can != None:
+            self.can_id = self.can.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = self.color[self.loc])
 
     def cal_cord(self, direction):
         pass
