@@ -2,6 +2,7 @@ import numpy as np
 import time
 import sys
 import random
+import copy
 
 if sys.version_info.major==2:
     import Tkinter as tk
@@ -62,7 +63,7 @@ class Car:
         pass
 
 class light:
-    def __init__(self, source_position, length, width, Canvas, direction = 'L'):
+    def __init__(self, source_position, length, width, Canvas, UNIT, direction = 'L'):
         """ 
         source position should be point class.
         derection should be :
@@ -70,13 +71,15 @@ class light:
         'R' Right light is red
         the left light is red when the road direction is up or left.
         """
-        self.sp = source_position
-        self.width = width
-        self.length = length
+        self.sp = copy.deepcopy(source_position)
+        self.sp.x *= UNIT
+        self.sp.y *= UNIT
+        self.width = width * UNIT
+        self.length = length * UNIT
         self.direction = direction
         self.mode = length >= width        # if length >= width means the light should be horizontal.
         self.changeFlag = False
-        self.ep = point(self.sp.x + length, self.sp.y + width)
+        self.ep = point(self.sp.x + self.length, self.sp.y + self.width)
         self.red = None
         self.yellow = None
         self.green = None
@@ -99,7 +102,7 @@ class light:
             return point(self.sp.x + round(self.length / 3), self.sp.y), \
                     point(self.sp.x + round(self.length / 3 * 2), self.sp.y + self.width)
         else:
-            return point(self.sp.x + round(self.width / 3), self.sp.y), \
+            return point(self.sp.x, self.sp.y +  + round(self.width / 3)), \
                     point(self.sp.x + self.length, self.sp.y + round(self.width / 3 * 2))
 
     def cal_G_cod(self):
@@ -118,13 +121,13 @@ class light:
         return self.changeFlag
 
     def draw(self):
-        self.can.create_rectangle(self.sp.x,self.sp.y,self.ep.x,self.ep.y,fill = 'gray')
+        self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
         point_a,point_b = self.cal_R_cod()
-        self.red = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'red')
+        self.red = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
         point_a,point_b = self.cal_Y_cod()
-        self.yellow = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'yellow')
+        self.yellow = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'yellow')
         point_a,point_b = self.cal_G_cod()
-        self.green = self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'green')
+        self.green = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
 
     def _Change(self, color):
         self.changeFlag = not self.changeFlag
@@ -151,6 +154,7 @@ class traffic_lights(tk.Tk,object):
         self.speed = self.UNIT  # initial speed 
         self.roadLen = 12 # self.UNIT
         self.size = 100
+        self.canvas = tk.Canvas(self, bg = "white", height = self.size * self.UNIT, width = self.size * self.UNIT)
         roadV_light_size = (6, 2)
         roadH_light_size = (2, 6)
 
@@ -160,22 +164,20 @@ class traffic_lights(tk.Tk,object):
         self.road_point_NE = point(*((self.size/2 + self.roadLen/2),(self.size/2 - self.roadLen/2)))       # Northeast
         self.road_point_SE = point(*((self.size/2 + self.roadLen/2), (self.size/2 + self.roadLen/2)))       # southeast
 
-        self.light_NW = light(point(self.road_point_NW.x - roadH_light_size[0], self.road_point_NW.y), *roadH_light_size, self.canvas, 'L')
-        self.light_SW = light(self.road_point_SW, *roadV_light_size, self.canvas, 'L')
-        self.light_SE = light(point(self.road_point_SE.x, self.size/2), *roadH_light_size, self.canvas, 'R')
-        self.light_NE = light(point(self.size/2, self.road_point_NE.y - roadV_light_size[1]), *roadV_light_size, self.canvas, 'R')
+        self.light_NW = light(point(self.road_point_NW.x - roadH_light_size[0], self.road_point_NW.y), *roadH_light_size, self.canvas, self.UNIT, 'L')
+        self.light_SW = light(self.road_point_SW, *roadV_light_size, self.canvas, self.UNIT, 'L')
+        self.light_SE = light(point(self.road_point_SE.x, self.size/2), *roadH_light_size, self.canvas, self.UNIT, 'R')
+        self.light_NE = light(point(self.size/2, self.road_point_NE.y - roadV_light_size[1]), *roadV_light_size, self.canvas, self.UNIT, 'R')
 
         self.title('traffic_lights')
         self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
         self.build_menu()
         self.Cross_street()
-        # self.cross_light(
-        #     self.road_point_NW.x - self.UNIT * 4,
-        #     self.road_point_NW.y,
-        #     self.road_point_SW.x,
-        #     self.road_point_SW.y,
-        #     'v'
-        #     )
+        # self.light_NW.draw()
+        # self.light_SW.draw()
+        # self.light_SE.draw()
+        # self.light_NE.draw()
+        # self.light_NE._Change('green')
         # self.lights()
         self.canvas.pack()
 
@@ -218,78 +220,45 @@ class traffic_lights(tk.Tk,object):
         self.config(menu=self.menubar)
     
     def Cross_street(self):    # build the street
-        self.canvas=tk.Canvas(self,bg="white",height = self.size * self.UNIT, width = self.size * self.UNIT)
+        # self.canvas=tk.Canvas(self,bg="white",height = self.size * self.UNIT, width = self.size * self.UNIT)
+        self.canvas.create_rectangle(
+            0,0, 
+            self.road_point_NW.x * self.UNIT, self.road_point_NW.y * self.UNIT, 
+            fill = 'black'
+        )
+        self.canvas.create_rectangle(
+            0, self.road_point_SW.y * self.UNIT, 
+            self.road_point_SW.x * self.UNIT, self.size * self.UNIT, 
+            fill = 'black'
+        )
+        self.canvas.create_rectangle(
+            self.road_point_SE.x * self.UNIT, self.road_point_SE.y * self.UNIT, 
+            self.size * self.UNIT, self.size * self.UNIT, 
+            fill = 'black'
+        )
+        self.canvas.create_rectangle(
+            self.road_point_NE.x * self.UNIT, 0, 
+            self.size * self.UNIT, self.road_point_NE.y * self.UNIT, 
+            fill = 'black'
+        )
+        self.canvas.create_line(
+            0, self.size/2 * self.UNIT, 
+            self.size * self.UNIT, self.size/2 * self.UNIT, 
+            fill = 'black', 
+            dash = (4, 4)
+        )
+        self.canvas.create_line(
+            self.size/2 * self.UNIT, 0, 
+            self.size/2 * self.UNIT, self.size * self.UNIT, 
+            fill = 'black', 
+            dash = (4, 4)
+        )
 
-        self.canvas.create_rectangle(0, 0, self.road_point_NW.x * self.UNIT, self.road_point_NW.y * self.UNIT, fill = 'black')
-        self.canvas.create_rectangle(0, self.road_point_SW.y * self.UNIT, self.road_point_SW.x * self.UNIT, self.size * self.UNIT, fill = 'black')
-        self.canvas.create_rectangle(self.road_point_SE.x * self.UNIT, self.road_point_SE.y * self.UNIT, self.size * self.UNIT, self.size * self.UNIT, fill = 'black')
-        self.canvas.create_rectangle(self.road_point_NE.x * self.UNIT, 0, self.size * self.UNIT, self.road_point_NE.y * self.UNIT, fill = 'black')
-
-        self.canvas.create_line(0, self.size/2 * self.UNIT, self.size * self.UNIT,self.size/2 * self.UNIT, fill = 'black', dash = (4, 4))
-        self.canvas.create_line(self.size/2 * self.UNIT, 0, self.size/2 * self.UNIT, self.size * self.UNIT, fill = 'black', dash = (4, 4))
-
-    # def cross_light(self, x1, y1, x2, y2, mode, left_light_col = 'red', right_light_col = 'green'): # left or right of the move direction.
-    #     self.light_2 = self.canvas.create_rectangle(x1, y1, x2, y2,fill='gray')
-    #     if mode == 'h':
-    #         self.canvas.create_oval(x1, y1, round((2 * x1 + x2)/3), y2, fill = left_light_col)
-    #         self.canvas.create_oval(round((2 * x1 + x2)/3), y1, round((x1 + 2 * x2)/3), y2, fill = 'yellow')
-    #         self.canvas.create_oval(round((x1 + 2 * x2)/3), y1, x2, y2, fill = right_light_col)
-    #     elif mode == 'v':
-    #         self.canvas.create_oval(x1, y1, x2, round((2 * y1 + y2)/3), fill = left_light_col)
-    #         self.canvas.create_oval(x1, round((2 * y1 + y2)/3), x2, round((y1 + 2 * y2)/3), fill = 'yellow')
-    #         self.canvas.create_oval(x1, round((y1 + 2 * y2)/3), x2, y2, fill = right_light_col)
-    #     else:
-    #         pass
-
-
-
-    # def lights(self):       # initial light and light color
-
-    #     self.light_1=self.canvas.create_rectangle(
-    #         self.road_point_NW[0] - self.UNIT, 
-    #         self.road_point_NW[1],
-    #         265,
-    #         215,
-    #         fill='gray'
-    #     )
-
-        # self.light_2=self.canvas.create_rectangle(215,235,225,265,fill='gray')
-        # self.light_3=self.canvas.create_rectangle(275,235,285,265,fill='gray')
-        # self.light_4=self.canvas.create_rectangle(235,275,265,285,fill='gray')
-
-        # self.red_1=self.canvas.create_oval(235,225,245,215,fill='red')
-        # self.red_2=self.canvas.create_oval(215,255,225,265,fill='gray')
-        # self.red_3=self.canvas.create_oval(275,235,285,245,fill='gray')
-        # self.red_4=self.canvas.create_oval(255,275,265,285,fill='red')
-
-        # self.green_1=self.canvas.create_oval(255,225,265,215,fill='gray')
-        # self.green_2=self.canvas.create_oval(215,235,225,245,fill='green')
-        # self.green_3=self.canvas.create_oval(275,255,285,265,fill='green')
-        # self.green_4=self.canvas.create_oval(235,275,245,285,fill='gray')
+    def light(self):
+        pass
 
     def light_change(self):     #change the color of lights
-            if self.change ==1:
-                self.canvas.itemconfig(self.green_1,fill = 'green')
-                self.canvas.itemconfig(self.green_2,fill = 'gray')
-                self.canvas.itemconfig(self.green_3,fill = 'gray')
-                self.canvas.itemconfig(self.green_4,fill = 'green')
-
-                self.canvas.itemconfig(self.red_1,fill = 'gray')
-                self.canvas.itemconfig(self.red_2,fill = 'red')
-                self.canvas.itemconfig(self.red_3,fill = 'red')
-                self.canvas.itemconfig(self.red_4,fill = 'gray')
-                self.change = 0
-            else:
-                self.canvas.itemconfig(self.green_1,fill = 'gray')
-                self.canvas.itemconfig(self.green_2,fill = 'green')
-                self.canvas.itemconfig(self.green_3,fill = 'green')
-                self.canvas.itemconfig(self.green_4,fill = 'gray')
-
-                self.canvas.itemconfig(self.red_1,fill = 'red')
-                self.canvas.itemconfig(self.red_2,fill = 'gray')
-                self.canvas.itemconfig(self.red_3,fill = 'gray')
-                self.canvas.itemconfig(self.red_4,fill = 'red')
-                self.change = 1
+        pass
 
     def Car(self):
         while(True):
@@ -380,5 +349,5 @@ class traffic_lights(tk.Tk,object):
 
 if __name__ == '__main__':
     env = traffic_lights()
-    env.Cross_street()
+    # env.Cross_street()
     env.mainloop()
