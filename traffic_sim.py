@@ -32,7 +32,7 @@ class point:
     def getPosTuple(self):
         return self.x, self.y
 
-class Car:
+class Vehicle:
     def __init__(self, position, Canvas):
         dire = {
             'up': 'down',
@@ -212,7 +212,7 @@ class traffic_lights(tk.Tk,object):
         # self.light_SE.draw()
         # self.light_NE.draw()
         # self.light_NE._Change('green')
-        # self.lights()
+        self.light()
         self.canvas.pack()
 
     def Exit(self):
@@ -322,88 +322,89 @@ class traffic_lights(tk.Tk,object):
         # self.light_NE._Change('')
 
     def Car(self):
-        while(True):
-            if self.car==[]:    # if there no car, then create cars in random direction
-                if  random.random()>0.5:
-                    self.car_1=create_car_up()
-                    self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
-                    self.car.append([self.car1,self.car_1])
-                if  random.random()>0.5:
-                    self.car_2=create_car_left()
-                    self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
-                    self.car.append([self.car2,self.car_2])
+        pass
+    #     while(True):
+    #         if self.car==[]:    # if there no car, then create cars in random direction
+    #             if  random.random()>0.5:
+    #                 self.car_1=create_car_up()
+    #                 self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
+    #                 self.car.append([self.car1,self.car_1])
+    #             if  random.random()>0.5:
+    #                 self.car_2=create_car_left()
+    #                 self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
+    #                 self.car.append([self.car2,self.car_2])
 
-            for i in self.car:              # loop, create car
-                self.crash=0
-                if (i[1].x1==245 and i[1].x2==255):      # the car from up
-                    self.color_1 = self.canvas.itemcget(self.red_1, 'fill')
-                    if (self.color_1=='red'and i[1].y1+self.speed>=215 and i[1].y1<=215): # if meat red light stop
-                        i[1].y1+=0
-                        i[1].y2+=0
-                    else:
-                        for j in self.car:
-                            if (j!=i and j[1].x1==245 and j[1].x2==255):
-                                if (i[1].y2+self.speed >j[1].y1 and i[1].y2<=j[1].y1):   # if it will have a crash with a other car stop
-                                    self.crash=1
-                                    break
+    #         for i in self.car:              # loop, create car
+    #             self.crash=0
+    #             if (i[1].x1==245 and i[1].x2==255):      # the car from up
+    #                 self.color_1 = self.canvas.itemcget(self.red_1, 'fill')
+    #                 if (self.color_1=='red'and i[1].y1+self.speed>=215 and i[1].y1<=215): # if meat red light stop
+    #                     i[1].y1+=0
+    #                     i[1].y2+=0
+    #                 else:
+    #                     for j in self.car:
+    #                         if (j!=i and j[1].x1==245 and j[1].x2==255):
+    #                             if (i[1].y2+self.speed >j[1].y1 and i[1].y2<=j[1].y1):   # if it will have a crash with a other car stop
+    #                                 self.crash=1
+    #                                 break
 
-                        if self.crash==0:   # if no crash at all, change its position
-                            i[1].y1+=self.speed
-                            i[1].y2+=self.speed
-                            if(i[1].y2>=500):
-                                self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))  # update car's location
-                                self.canvas.delete(i)
-                                self.car.remove(i)
-                            else:
-                                self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
-                        else:
-                            i[1].y1+=0
-                            i[1].y2+=0
+    #                     if self.crash==0:   # if no crash at all, change its position
+    #                         i[1].y1+=self.speed
+    #                         i[1].y2+=self.speed
+    #                         if(i[1].y2>=500):
+    #                             self.canvas.coords(i[0],(i[1].x1,500,i[1].x2,i[1].y2))  # update car's location
+    #                             self.canvas.delete(i)
+    #                             self.car.remove(i)
+    #                         else:
+    #                             self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+    #                     else:
+    #                         i[1].y1+=0
+    #                         i[1].y2+=0
 
 
-                if (i[1].y1==245  and i[1].y2==255):
-                    self.color_2 = self.canvas.itemcget(self.red_2, 'fill')
-                    if (self.color_2=="red"and i[1].x1+self.speed>=215 and i[1].x1<=215):
-                        i[1].x1+=0
-                        i[1].x2+=0
-                        self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
-                    else:
-                        for j in self.car:
-                            if (j!=i and j[1].y1==245 and j[1].y2==255):
-                                if (i[1].x2+self.speed >j[1].x1 and i[1].x2<=j[1].x1):
-                                    self.crash=1
-                                    break
+    #             if (i[1].y1==245  and i[1].y2==255):
+    #                 self.color_2 = self.canvas.itemcget(self.red_2, 'fill')
+    #                 if (self.color_2=="red"and i[1].x1+self.speed>=215 and i[1].x1<=215):
+    #                     i[1].x1+=0
+    #                     i[1].x2+=0
+    #                     self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+    #                 else:
+    #                     for j in self.car:
+    #                         if (j!=i and j[1].y1==245 and j[1].y2==255):
+    #                             if (i[1].x2+self.speed >j[1].x1 and i[1].x2<=j[1].x1):
+    #                                 self.crash=1
+    #                                 break
 
-                        if self.crash==0:
-                            i[1].x1+=self.speed
-                            i[1].x2+=self.speed
-                            if(i[1].x2>=500):
-                                self.canvas.coords(i[0],(500,i[1].y1,i[1].x2,i[1].y2))
-                                self.canvas.delete(i)
-                                self.car.remove(i)
-                            else:
-                                self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
-                        else:
-                            i[1].x1+=0
-                            i[1].x2+=0
+    #                     if self.crash==0:
+    #                         i[1].x1+=self.speed
+    #                         i[1].x2+=self.speed
+    #                         if(i[1].x2>=500):
+    #                             self.canvas.coords(i[0],(500,i[1].y1,i[1].x2,i[1].y2))
+    #                             self.canvas.delete(i)
+    #                             self.car.remove(i)
+    #                         else:
+    #                             self.canvas.coords(i[0],(i[1].x1,i[1].y1,i[1].x2,i[1].y2))
+    #                     else:
+    #                         i[1].x1+=0
+    #                         i[1].x2+=0
 
-            if (self.time_stamp % 3==0): # when it loop 3 times ,the cars start to be created
-                if  random.random()>0.5:   # randomly create cars, 50%
-                    self.car_1=create_car_up()
-                    self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
-                    self.car.append([self.car1,self.car_1])
+    #         if (self.time_stamp % 3==0): # when it loop 3 times ,the cars start to be created
+    #             if  random.random()>0.5:   # randomly create cars, 50%
+    #                 self.car_1=create_car_up()
+    #                 self.car1 = self.canvas.create_rectangle(self.car_1.x1,self.car_1.y1,self.car_1.x2,self.car_1.y2,fill='yellow')
+    #                 self.car.append([self.car1,self.car_1])
 
-            if(self.time_stamp % 2==0):
-                if random.random()>0.5:
-                    self.car_2=create_car_left()
-                    self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
-                    self.car.append([self.car2,self.car_2])
+    #         if(self.time_stamp % 2==0):
+    #             if random.random()>0.5:
+    #                 self.car_2=create_car_left()
+    #                 self.car2 = self.canvas.create_rectangle(self.car_2.x1,self.car_2.y1,self.car_2.x2,self.car_2.y2,fill='blue')
+    #                 self.car.append([self.car2,self.car_2])
 
-            self.time_stamp += 1
-            if (self.time_stamp % 3 == 0):
-                self.light_change()
-            self.update()
-            time.sleep(0.25)  #system sleep 0.25
+    #         self.time_stamp += 1
+    #         if (self.time_stamp % 3 == 0):
+    #             self.light_change()
+    #         self.update()
+    #         time.sleep(0.25)  #system sleep 0.25
             
     def backgound(self):
         pass
