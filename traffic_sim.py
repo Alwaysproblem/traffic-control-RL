@@ -77,6 +77,9 @@ class light:
         self.mode = length >= width        # if length >= width means the light should be horizontal.
         self.changeFlag = False
         self.ep = point(self.sp.x + length, self.sp.y + width)
+        self.red = None
+        self.yellow = None
+        self.green = None
         self.can = Canvas
 
     def cal_R_cod(self):
@@ -111,8 +114,15 @@ class light:
             else:
                 return self.sp, point(self.sp.x + self.length, self.sp.y + round(self.width / 3))
 
-    def Change(self):
+    def _Change(self, color):
         self.changeFlag = not self.changeFlag
+        dic = {
+            'red': self.red,
+            'yellow': self.yellow,
+            'green': self.green
+        }
+        self.can.itemconfig(self.red,fill = 'gray')
+        self.red
 
     def getFlagState(self):
         return self.changeFlag
@@ -122,6 +132,7 @@ class light:
         self.can.create_oval(235,225,245,215,fill = 'red')
         self.can.create_oval(235,225,245,215,fill = 'yellow')
         self.can.create_oval(235,225,245,215,fill = 'green')
+
 
 
 class traffic_lights(tk.Tk,object):
