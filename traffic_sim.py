@@ -172,7 +172,7 @@ class light:
         }
         for i in dic.keys():
             if i == color:
-                self.can.itemconfig(dic[i],fill = color)
+                self.can.itemconfig(dic[i], fill = color)
             else:
                 self.can.itemconfig(dic[i], fill = 'gray')
 
@@ -309,10 +309,17 @@ class traffic_lights(tk.Tk,object):
         )
 
     def light(self):
-        pass
+        self.light_NW.draw()
+        self.light_SW.draw()
+        self.light_SE.draw()
+        self.light_NE.draw()
 
     def light_change(self):     #change the color of lights
         pass
+        # self.light_NW._Change('')
+        # self.light_SW._Change('')
+        # self.light_SE._Change('')
+        # self.light_NE._Change('')
 
     def Car(self):
         while(True):
