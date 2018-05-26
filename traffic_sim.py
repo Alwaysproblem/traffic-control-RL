@@ -37,8 +37,8 @@ class Vehicle:
         dire = {
             'up': 'down',
             'down': 'up',
-            'left': 'right',
-            'right': 'left'
+            'left': 'left',
+            'right': 'right'
         }
         self.mapSize = size
         self.loc = location                     # the car initial location
@@ -71,26 +71,26 @@ class Vehicle:
         """ calculate the postion of the car from the upper bound."""
         self.x1 = (self.mapSize//2 + self.road//4) * self.unit
         self.x2 = (self.mapSize//2 + self.road//4 + 1) * self.unit
-        self.y1 = (self.mapSize) * self.unit
-        self.y2 = (self.mapSize - 1) * self.unit
+        self.y1 = 0 * self.unit
+        self.y2 = 1 * self.unit
 
     def down(self):
         self.x1 = (self.mapSize//2 - self.road//4 - 1) * self.unit
         self.x2 = (self.mapSize//2 - self.road//4) * self.unit
-        self.y1 = 1 * self.unit
-        self.y2 = 0 * self.unit
+        self.y1 = (self.mapSize - 1) * self.unit
+        self.y2 = (self.mapSize) * self.unit
 
     def left(self):
         self.x1 = 0 * self.unit
         self.x2 = 1 * self.unit
-        self.y1 = (self.mapSize//2 + self.road//4 + 1) * self.unit
-        self.y2 = (self.mapSize//2 + self.road//4) * self.unit
+        self.y1 = (self.mapSize//2 - self.road//4 - 1) * self.unit
+        self.y2 = (self.mapSize//2 - self.road//4) * self.unit
 
     def right(self):
         self.x1 = (self.mapSize - 1) * self.unit
         self.x2 = (self.mapSize) * self.unit
-        self.y1 = (self.mapSize//2 - self.road//4) * self.unit
-        self.y2 = (self.mapSize//2 - self.road//4 - 1) * self.unit
+        self.y1 = (self.mapSize//2 + self.road//4) * self.unit
+        self.y2 = (self.mapSize//2 + self.road//4 + 1) * self.unit
     
     def create(self):
         if self.can != None:
@@ -100,7 +100,8 @@ class Vehicle:
         return self.step_num
 
     def distroy(self):
-        pass
+        if self.step_num >= self.mapSize:
+            self.can.delete(self.can_id)
 
     def cal_cord(self, direction):
         pass
@@ -109,16 +110,18 @@ class Vehicle:
         return self.x1, self.x2, self.y1, self.y2
 
     def move(self):
-        if self.loc == 'left':
-            self.can.move(self.can_id,self.unit,0)#left
-        elif self.loc == 'down':
-            self.can.move(self.can_id,0,self.unit)#down
-        elif self.loc == 'right':
-            self.can.move(self.can_id,-self.unit,0)#right
-        elif self.loc == 'up':
-            self.can.move(self.can_id,0,-self.unit)#up
+        if self.direction == 'left':
+            self.can.move(self.can_id, self.unit, 0)      #left
+        elif self.direction == 'down':
+            self.can.move(self.can_id, 0, self.unit)      #down
+        elif self.direction == 'right':
+            self.can.move(self.can_id, -self.unit, 0)     #right
+        elif self.direction == 'up':
+            self.can.move(self.can_id, 0, -self.unit)     #up
         else:
             pass
+        self.step_num += 1
+        self.distroy()
 
     def stop(self):
         pass
@@ -230,6 +233,11 @@ class traffic(tk.Tk,object):
         self.light_SE = light(point(self.road_point_SE.x, self.size/2), *roadH_light_size, self.canvas, self.UNIT, 'R')
         self.light_NE = light(point(self.size/2, self.road_point_NE.y - roadV_light_size[1]), *roadV_light_size, self.canvas, self.UNIT, 'R')
 
+        self.car_l = Vehicle('left', self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_r = Vehicle('right', self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_u = Vehicle('up', self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_d = Vehicle('down', self.canvas, self.UNIT, self.size, self.roadLen)
+
     def backgound(self):
         self.title('traffic_lights')
         self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
@@ -237,6 +245,13 @@ class traffic(tk.Tk,object):
         self.Cross_street()
         self.light()
         self.canvas.pack()
+        for _ in range(100):
+            time.sleep(0.5)
+            self.car_l.move()
+            self.car_r.move()
+            self.car_u.move()
+            self.car_d.move()
+            self.canvas.update()
 
     def Exit(self):
         self.destroy()
