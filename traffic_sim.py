@@ -33,7 +33,7 @@ class point:
         return self.x, self.y
 
 class Vehicle:
-    def __init__(self, position, Canvas):
+    def __init__(self, position, Canvas, UNIT):
         dire = {
             'up': 'down',
             'down': 'up',
@@ -48,6 +48,7 @@ class Vehicle:
         self.y2 = 0
         self.can_id = None
         self.can = Canvas
+        self.unit = UNIT
         func = {
             'up': self.up,
             'down': self.down,
