@@ -33,26 +33,57 @@ class point:
         return self.x, self.y
 
 class Car:
-    def __init__(self, direction):
-        self.direction = direction
-        self.x1 = 0 + 1
-        self.x2 = 5
-        self.y1 = 250 
-        self.y2 = 255 
+    def __init__(self, position, Canvas):
+        dire = {
+            'up': 'down',
+            'down': 'up',
+            'left': 'right',
+            'right': 'left'
+        }
+        self.pos = position                     # the car initial position
+        self.direction = dire[position]         # the direction of moving
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
+        self.can_id = None
+        self.can = Canvas
+        func = {
+            'up': self.up,
+            'down': self.down,
+            'left': self.left,
+            'right': self.right
+        }
+        func[self.direction]()
     
     def up(self):
         """ calculate the postion of the car from the upper bound."""
-        pass
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
 
     def down(self):
-        pass
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
 
     def left(self):
-        pass
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
 
     def right(self):
-        pass
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
     
+    def create(self):
+        pass
+
     def cal_cord(self, direction):
         pass
 
@@ -60,6 +91,9 @@ class Car:
         return self.x1, self.x2, self.y1, self.y2
 
     def move(self):
+        pass
+
+    def stop(self):
         pass
 
 class light:
@@ -241,17 +275,37 @@ class traffic_lights(tk.Tk,object):
             self.size * self.UNIT, self.road_point_NE.y * self.UNIT, 
             fill = 'black'
         )
+        # create the line:
+        line_col = 'orange'
+        line_patten = (20, 20)
+        line_wid = self.UNIT / 2
         self.canvas.create_line(
             0, self.size/2 * self.UNIT, 
-            self.size * self.UNIT, self.size/2 * self.UNIT, 
-            fill = 'black', 
-            dash = (4, 4)
+            self.road_point_NW.x * self.UNIT, self.size/2 * self.UNIT, 
+            fill = line_col, 
+            dash = line_patten,
+            width = line_wid
         )
         self.canvas.create_line(
-            self.size/2 * self.UNIT, 0, 
-            self.size/2 * self.UNIT, self.size * self.UNIT, 
-            fill = 'black', 
-            dash = (4, 4)
+            self.road_point_NE.x * self.UNIT, self.size/2 * self.UNIT, 
+            self.size * self.UNIT, self.size/2 * self.UNIT, 
+            fill = line_col,
+            dash = line_patten,
+            width = line_wid
+        )
+        self.canvas.create_line(
+            self.size/2 * self.UNIT, 0,
+            self.size/2 * self.UNIT, self.road_point_NE.y * self.UNIT,
+            fill = line_col,
+            dash = line_patten,
+            width = line_wid
+        )
+        self.canvas.create_line(
+            self.size/2 * self.UNIT, self.road_point_SE.y * self.UNIT,
+            self.size/2 * self.UNIT, self.size * self.UNIT,
+            fill = line_col,
+            dash = line_patten,
+            width = line_wid
         )
 
     def light(self):
