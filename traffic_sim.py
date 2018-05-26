@@ -118,10 +118,13 @@ class light:
         return self.changeFlag
 
     def draw(self):
-        self.can.create_rectangle(215,235,225,265,fill = 'gray')
-        self.can.create_oval(235,225,245,215,fill = 'red')
-        self.can.create_oval(235,225,245,215,fill = 'yellow')
-        self.can.create_oval(235,225,245,215,fill = 'green')
+        self.can.create_rectangle(self.sp.x,self.sp.y,self.ep.x,self.ep.y,fill = 'gray')
+        point_a,point_b = self.cal_R_cod()
+        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'red')
+        point_a,point_b = self.cal_Y_cod()
+        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'yellow')
+        point_a,point_b = self.cal_G_cod()
+        self.can.create_oval(point_a.x,point_a.y,point_b.x,point_b.y,fill = 'green')
 
 
 class traffic_lights(tk.Tk,object):
