@@ -102,7 +102,16 @@ class Vehicle:
         return self.x1, self.x2, self.y1, self.y2
 
     def move(self):
-        pass
+        if self.loc == 'left':
+            self.can.move(self.can_id,self.unit,0)#left
+        elif self.loc == 'down':
+            self.can.move(self.can_id,0,self.unit)#down
+        elif self.loc == 'right':
+            self.can.move(self.can_id,-self.unit,0)#right
+        elif self.loc == 'up':
+            self.can.move(self.can_id,0,-self.unit)#up
+        else:
+            pass
 
     def stop(self):
         pass
