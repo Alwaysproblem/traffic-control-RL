@@ -33,19 +33,21 @@ class point:
         return self.x, self.y
 
 class Vehicle:
-    def __init__(self, position, Canvas, UNIT):
+    def __init__(self, position, Canvas, UNIT = 10, size = 100, RoadWidth = 12):
         dire = {
             'up': 'down',
             'down': 'up',
             'left': 'right',
             'right': 'left'
         }
+        self.mapSize = size
         self.pos = position                     # the car initial position
         self.direction = dire[position]         # the direction of moving
         self.x1 = 0
         self.x2 = 0
         self.y1 = 0
         self.y2 = 0
+        self.road = RoadWidth
         self.can_id = None
         self.can = Canvas
         self.unit = UNIT
@@ -55,6 +57,12 @@ class Vehicle:
             'left': self.left,
             'right': self.right
         }
+        self.color = {
+            'up': 'purple',
+            'down': 'firebrick1',
+            'left': 'blue4',
+            'right': 'deep pink'
+        }
         func[self.direction]()
     
     def up(self):
@@ -63,6 +71,7 @@ class Vehicle:
         self.x2 = 0
         self.y1 = 0
         self.y2 = 0
+        self.can_id = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
 
     def down(self):
         self.x1 = 0
