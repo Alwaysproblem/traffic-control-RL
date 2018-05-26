@@ -65,6 +65,7 @@ class Vehicle:
         }
         func[self.loc]()
         self.create()
+        self.step_num = 1  # if step number > 100 delete the car from canvas.
     
     def up(self):
         """ calculate the postion of the car from the upper bound."""
@@ -130,6 +131,7 @@ class light:
         self.green = None
         self.can = Canvas
 
+
     def cal_R_cod(self):
         if self.direction == 'L':
             if self.mode == True:
@@ -189,20 +191,19 @@ class light:
 
 
 
-class traffic_lights(tk.Tk,object):
+class traffic(tk.Tk,object):
     def __init__(self):
-        super(traffic_lights, self).__init__()
+        super(traffic, self).__init__()
         self.UNIT = 10
         self.change = True
         self.car_list = []
-        self.time_stamp = 0
+        # self.time_stamp = 0
         self.speed = self.UNIT  # initial speed 
         self.roadLen = 12 # self.UNIT
         self.size = 100
         self.canvas = tk.Canvas(self, bg = "white", height = self.size * self.UNIT, width = self.size * self.UNIT)
         roadV_light_size = (6, 2)
         roadH_light_size = (2, 6)
-
 
         self.road_point_NW = point(*((self.size/2 - self.roadLen/2),(self.size/2 - self.roadLen/2)))      # Northwest
         self.road_point_SW = point(*((self.size/2 - self.roadLen/2),(self.size/2 + self.roadLen/2)))       # Southwest
@@ -214,15 +215,11 @@ class traffic_lights(tk.Tk,object):
         self.light_SE = light(point(self.road_point_SE.x, self.size/2), *roadH_light_size, self.canvas, self.UNIT, 'R')
         self.light_NE = light(point(self.size/2, self.road_point_NE.y - roadV_light_size[1]), *roadV_light_size, self.canvas, self.UNIT, 'R')
 
+    def backgound(self):
         self.title('traffic_lights')
         self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
         self.build_menu()
         self.Cross_street()
-        # self.light_NW.draw()
-        # self.light_SW.draw()
-        # self.light_SE.draw()
-        # self.light_NE.draw()
-        # self.light_NE._Change('green')
         self.light()
         self.canvas.pack()
 
@@ -417,10 +414,29 @@ class traffic_lights(tk.Tk,object):
     #         self.update()
     #         time.sleep(0.25)  #system sleep 0.25
             
-    def backgound(self):
+
+
+class TrafficSimulator(traffic):
+    def __init__(self):
+        super(TrafficSimulator, self).__init__()
+        self.action = ['switch', 'stay']
+        self.time_stamp = 0
+        self.backgound()
+
+    def restart(self):
         pass
 
+    def render(self):
+        pass
+
+    def step(self, action):
+        pass
+
+
+
+
 if __name__ == '__main__':
-    env = traffic_lights()
+    # env = traffic_lights()
     # env.Cross_street()
+    env = TrafficSimulator()
     env.mainloop()
