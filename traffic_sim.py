@@ -86,8 +86,8 @@ class Vehicle:
         self.y2 = (self.mapSize//2 + self.road//4)*self.unit
 
     def right(self):
-        self.x1 = 1*self.unit
-        self.x2 = 0*self.unit
+        self.x1 = (self.mapSize - 1)*self.unit
+        self.x2 = (self.mapSize)*self.unit
         self.y1 = (self.mapSize//2 - self.road//4)*self.unit
         self.y2 = (self.mapSize//2 - self.road//4 - 1)*self.unit
     
