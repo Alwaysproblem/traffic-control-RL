@@ -359,6 +359,7 @@ class traffic(tk.Tk,object):
         # self.light_SE._Change('')
         # self.light_NE._Change('')
 
+
     def Car(self):
         pass
     #     while(True):
