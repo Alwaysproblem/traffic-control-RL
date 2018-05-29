@@ -191,11 +191,7 @@ class traffic(tk.Tk,object):
             for i in car_list:
                 print(f'carID: {i[1]} ', end = '')
                 i[0].show()
-
                 i[0].move()
-                
-
-
             self.canvas.update()
             print()
 
