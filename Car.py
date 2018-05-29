@@ -13,10 +13,6 @@ class Vehicle:
         self.direction = dire[self.loc]         # the direction of moving
         self.sp = point(0, 0)                   # start point 
         self.ep = point(0, 0)                       # end point
-        # self.x1 = 0
-        # self.x2 = 0
-        # self.y1 = 0
-        # self.y2 = 0
         self.can_id = None
         self.road = RoadWidth
         self.can = Canvas
@@ -80,6 +76,7 @@ class Vehicle:
     def create(self):
         if self.can != None:
             self.can_id = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = self.color[self.loc])
+            
 
     def getStep(self):
         return self.step_num
@@ -89,7 +86,27 @@ class Vehicle:
             self.can.delete(self.can_id)
 
     def cal_distance_from_light(self):
-        pass
+        light_dic = {
+            'left': 'NW',
+            'right': 'SW',
+            'up': 'NE',
+            'down': 'SE'
+        }
+        filt_light = [light for light in self.all_light if light.ID == light_dic[self.direction]]
+        if len(filt_light) != 1:
+            print(f'there will be something not right\nhere is the {filt_light}')
+            return
+
+        if self.direction == 'left':
+            pass
+        elif self.direction == 'down':
+            pass
+        elif self.direction == 'right':
+            pass
+        elif self.direction == 'up':
+            pass
+        else:
+            pass
 
     def cal_cord_after_move(self):
         if self.direction == 'left':
@@ -122,6 +139,8 @@ class Vehicle:
             self.can.move(self.can_id, 0, -self.unit)     #up
         else:
             pass
+
+        self.can.tag_raise(self.can_id)
         self.cal_cord_after_move()
         self.step_num += 1
         self.distroy()

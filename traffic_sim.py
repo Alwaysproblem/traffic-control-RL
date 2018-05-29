@@ -7,11 +7,11 @@ import time
 import sys
 import random
 
-
 if sys.version_info.major==2:
     import Tkinter as tk
 else:
     import tkinter as tk
+
 
 class traffic(tk.Tk,object):
     def __init__(self):
@@ -69,26 +69,6 @@ class traffic(tk.Tk,object):
         self.car_r = Vehicle('right', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
         self.car_u = Vehicle('up', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
         self.car_d = Vehicle('down', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
-
-    def backgound(self):
-        self.title('traffic_lights')
-        self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
-        self.build_menu()
-        self.Cross_street()
-        self.light()
-        self.canvas.pack()
-
-        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
-
-        for _ in range(100):
-            time.sleep(0.5)
-            for i in car_list:
-                i[0].move()
-                print(f'carID: {i[1]}', end = '')
-                i[0].show()
-
-            self.canvas.update()
-            print()
 
     def Exit(self):
         self.destroy()
@@ -196,6 +176,25 @@ class traffic(tk.Tk,object):
         # self.light_SE._Change('')
         # self.light_NE._Change('')
 
+    def backgound(self):
+        self.title('traffic_lights')
+        self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
+        self.build_menu()
+        self.Cross_street()
+        self.light()
+        self.canvas.pack()
+
+        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
+
+        for _ in range(100):
+            time.sleep(0.5)
+            for i in car_list:
+                i[0].move()
+                # print(f'carID: {i[1]}', end = '')
+                # i[0].show()
+
+            self.canvas.update()
+            print()
 
     def Car(self):
         pass
