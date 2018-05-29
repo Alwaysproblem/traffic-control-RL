@@ -64,16 +64,12 @@ class light:
 
     def draw(self):
         bg = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
-        # self.can.tag_lower(bg)
         point_a,point_b = self.cal_R_cod()
         self.red = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
-        # self.can.tag_lower(self.red)
         point_a,point_b = self.cal_Y_cod()
         self.yellow = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'yellow')
-        # self.can.tag_lower(self.yellow)
         point_a,point_b = self.cal_G_cod()
         self.green = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
-        # self.can.tag_lower(self.green)
 
     def _Change(self, color):
         self.changeFlag = not self.changeFlag
