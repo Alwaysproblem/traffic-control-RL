@@ -2,6 +2,7 @@ import numpy as np
 import time
 import sys
 import random
+from QLearning import QL
 
 if sys.version_info.major==2:
     import Tkinter as tk
