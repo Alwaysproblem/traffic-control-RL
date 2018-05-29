@@ -1,213 +1,17 @@
+from Car import Vehicle
+from Light import light
+from Point import point
+
 import numpy as np
 import time
 import sys
 import random
-import copy
+
 
 if sys.version_info.major==2:
     import Tkinter as tk
 else:
     import tkinter as tk
-
-
-# class create_car_up(object):
-#     def __init__(self):
-#         self.x1 = 250
-#         self.x2 = 255
-#         self.y1 = 0 + 1
-#         self.y2 = 5 + 1
-
-# class create_car_left(object):
-#     def __init__(self):
-#         self.x1 = 0 + 1
-#         self.x2 = 5
-#         self.y1 = 250 
-#         self.y2 = 255 
-
-class point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def getPosTuple(self):
-        return self.x, self.y
-
-class Vehicle:
-    def __init__(self, location, Canvas = None, UNIT = 10, size = 100, RoadWidth = 12):
-        dire = {
-            'up': 'down',
-            'down': 'up',
-            'left': 'left',
-            'right': 'right'
-        }
-        self.mapSize = size
-        self.loc = location                     # the car initial location
-        self.direction = dire[self.loc]         # the direction of moving
-        self.x1 = 0
-        self.x2 = 0
-        self.y1 = 0
-        self.y2 = 0
-        self.can_id = None
-        self.road = RoadWidth
-        self.can = Canvas
-        self.unit = UNIT
-        func = {
-            'up': self.up,
-            'down': self.down,
-            'left': self.left,
-            'right': self.right
-        }
-        self.color = {
-            'up': 'purple',
-            'down': 'firebrick1',
-            'left': 'blue4',
-            'right': 'deep pink'
-        }
-        func[self.loc]()
-        self.create()
-        self.step_num = 1  # if step number > 100 delete the car from canvas.
-    
-    def up(self):
-        """ calculate the postion of the car from the upper bound."""
-        self.x1 = (self.mapSize//2 + self.road//4) * self.unit
-        self.x2 = (self.mapSize//2 + self.road//4 + 1) * self.unit
-        self.y1 = 0 * self.unit
-        self.y2 = 1 * self.unit
-
-    def down(self):
-        self.x1 = (self.mapSize//2 - self.road//4 - 1) * self.unit
-        self.x2 = (self.mapSize//2 - self.road//4) * self.unit
-        self.y1 = (self.mapSize - 1) * self.unit
-        self.y2 = (self.mapSize) * self.unit
-
-    def left(self):
-        self.x1 = 0 * self.unit
-        self.x2 = 1 * self.unit
-        self.y1 = (self.mapSize//2 - self.road//4 - 1) * self.unit
-        self.y2 = (self.mapSize//2 - self.road//4) * self.unit
-
-    def right(self):
-        self.x1 = (self.mapSize - 1) * self.unit
-        self.x2 = (self.mapSize) * self.unit
-        self.y1 = (self.mapSize//2 + self.road//4) * self.unit
-        self.y2 = (self.mapSize//2 + self.road//4 + 1) * self.unit
-    
-    def create(self):
-        if self.can != None:
-            self.can_id = self.can.create_rectangle(self.x1, self.y1, self.x2, self.y2, fill = self.color[self.loc])
-
-    def getStep(self):
-        return self.step_num
-
-    def distroy(self):
-        if self.step_num >= self.mapSize:
-            self.can.delete(self.can_id)
-
-    def cal_cord(self, direction):
-        pass
-
-    def getCarPos(self):
-        return self.x1, self.x2, self.y1, self.y2
-
-    def move(self):
-        if self.direction == 'left':
-            self.can.move(self.can_id, self.unit, 0)      #left
-        elif self.direction == 'down':
-            self.can.move(self.can_id, 0, self.unit)      #down
-        elif self.direction == 'right':
-            self.can.move(self.can_id, -self.unit, 0)     #right
-        elif self.direction == 'up':
-            self.can.move(self.can_id, 0, -self.unit)     #up
-        else:
-            pass
-        self.step_num += 1
-        self.distroy()
-
-    def stop(self):
-        pass
-
-class light:
-    def __init__(self, source_position, length, width, Canvas, UNIT, direction = 'L'):
-        """ 
-        source position should be point class.
-        derection should be :
-        'L' left light is red 
-        'R' Right light is red
-        the left light is red when the road direction is up or left.
-        """
-        self.sp = copy.deepcopy(source_position)
-        self.sp.x *= UNIT
-        self.sp.y *= UNIT
-        self.width = width * UNIT
-        self.length = length * UNIT
-        self.direction = direction
-        self.mode = length >= width        # if length >= width means the light should be horizontal.
-        self.changeFlag = False
-        self.ep = point(self.sp.x + self.length, self.sp.y + self.width)
-        self.red = None
-        self.yellow = None
-        self.green = None
-        self.can = Canvas
-
-
-    def cal_R_cod(self):
-        if self.direction == 'L':
-            if self.mode == True:
-                return self.sp, point(self.sp.x + round(self.length / 3), self.sp.y + self.width)
-            else:
-                return self.sp, point(self.sp.x + self.length, self.sp.y + round(self.width / 3))
-        else:
-            if self.mode == True:
-                return point(self.sp.x + round(self.length / 3 * 2), self.sp.y), self.ep
-            else:
-                return point(self.sp.x, self.sp.y + round(self.width / 3 * 2)), self.ep
-
-    def cal_Y_cod(self):
-        if self.mode == True:
-            return point(self.sp.x + round(self.length / 3), self.sp.y), \
-                    point(self.sp.x + round(self.length / 3 * 2), self.sp.y + self.width)
-        else:
-            return point(self.sp.x, self.sp.y +  + round(self.width / 3)), \
-                    point(self.sp.x + self.length, self.sp.y + round(self.width / 3 * 2))
-
-    def cal_G_cod(self):
-        if self.direction == 'L':
-            if self.mode == True:
-                return point(self.sp.x + round(self.length / 3 * 2), self.sp.y), self.ep
-            else:
-                return point(self.sp.x, self.sp.y + round(self.width / 3 * 2)), self.ep
-        else:
-            if self.mode == True:
-                return self.sp, point(self.sp.x + round(self.length / 3), self.sp.y + self.width)
-            else:
-                return self.sp, point(self.sp.x + self.length, self.sp.y + round(self.width / 3))
-
-    def getFlagState(self):
-        return self.changeFlag
-
-    def draw(self):
-        self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
-        point_a,point_b = self.cal_R_cod()
-        self.red = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
-        point_a,point_b = self.cal_Y_cod()
-        self.yellow = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'yellow')
-        point_a,point_b = self.cal_G_cod()
-        self.green = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
-
-    def _Change(self, color):
-        self.changeFlag = not self.changeFlag
-        dic = {
-            'red': self.red,
-            'yellow': self.yellow,
-            'green': self.green
-        }
-        for i in dic.keys():
-            if i == color:
-                self.can.itemconfig(dic[i], fill = color)
-            else:
-                self.can.itemconfig(dic[i], fill = 'gray')
-
-
 
 class traffic(tk.Tk,object):
     def __init__(self):
@@ -228,15 +32,43 @@ class traffic(tk.Tk,object):
         self.road_point_NE = point(*((self.size/2 + self.roadLen/2),(self.size/2 - self.roadLen/2)))       # Northeast
         self.road_point_SE = point(*((self.size/2 + self.roadLen/2), (self.size/2 + self.roadLen/2)))       # southeast
 
-        self.light_NW = light(point(self.road_point_NW.x - roadH_light_size[0], self.road_point_NW.y), *roadH_light_size, self.canvas, self.UNIT, 'L')
-        self.light_SW = light(self.road_point_SW, *roadV_light_size, self.canvas, self.UNIT, 'L')
-        self.light_SE = light(point(self.road_point_SE.x, self.size/2), *roadH_light_size, self.canvas, self.UNIT, 'R')
-        self.light_NE = light(point(self.size/2, self.road_point_NE.y - roadV_light_size[1]), *roadV_light_size, self.canvas, self.UNIT, 'R')
-
-        self.car_l = Vehicle('left', self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_r = Vehicle('right', self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_u = Vehicle('up', self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_d = Vehicle('down', self.canvas, self.UNIT, self.size, self.roadLen)
+        self.light_NW = light(
+            point(self.road_point_NW.x - roadH_light_size[0], self.road_point_NW.y),
+            *roadH_light_size,
+            self.canvas,
+            self.UNIT,
+            'NW',
+            'L'
+        )
+        self.light_SW = light(
+            self.road_point_SW,
+            *roadV_light_size,
+            self.canvas,
+            self.UNIT,
+            'SW',
+            'L'
+            )
+        self.light_SE = light(
+            point(self.road_point_SE.x,self.size/2),
+            *roadH_light_size,
+            self.canvas,
+            self.UNIT,
+            'SE',
+            'R'
+            )
+        self.light_NE = light(
+            point(self.size/2, self.road_point_NE.y - roadV_light_size[1]),
+            *roadV_light_size,
+            self.canvas,
+            self.UNIT,
+            'NE',
+            'R'
+            )
+        self.lightList = (self.light_NW, self.light_SW, self.light_SE, self.light_NE)
+        self.car_l = Vehicle('left', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_r = Vehicle('right', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_u = Vehicle('up', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        self.car_d = Vehicle('down', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
 
     def backgound(self):
         self.title('traffic_lights')
@@ -245,13 +77,18 @@ class traffic(tk.Tk,object):
         self.Cross_street()
         self.light()
         self.canvas.pack()
+
+        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
+
         for _ in range(100):
             time.sleep(0.5)
-            self.car_l.move()
-            self.car_r.move()
-            self.car_u.move()
-            self.car_d.move()
+            for i in car_list:
+                i[0].move()
+                print(f'carID: {i[1]}', end = '')
+                i[0].show()
+
             self.canvas.update()
+            print()
 
     def Exit(self):
         self.destroy()
@@ -451,6 +288,7 @@ class TrafficSimulator(traffic):
     def __init__(self):
         super(TrafficSimulator, self).__init__()
         self.action = ['switch', 'stay']
+        self.n_action = len(self.action)
         self.time_stamp = 0
         self.backgound()
 

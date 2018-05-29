@@ -14,7 +14,7 @@ road length can be about 100 units, one unit of road holds one car. The cars
 only travel in only one direction and are removed from the road when they
 reach the boundary of the simulated region. If a car is stopped by a red
 light, it cannot move forward. The cars cannot occupy the same space. Other
-cars therefore queue behind stopped cars. 
+cars therefore queue behind stopped cars.
 
 A controller can change the lights, but only after waiting at least three
 time-steps since the last change. 
