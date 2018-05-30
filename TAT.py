@@ -1,4 +1,4 @@
-from traffic_sim import Vehicle
+from traffic_sim import Vehicle,traffic
 import tkinter as tk
 
 C = tk.Canvas(bg = "white", height = 100, width = 100)
