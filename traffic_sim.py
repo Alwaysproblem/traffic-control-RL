@@ -198,6 +198,9 @@ class traffic(tk.Tk,object):
         # self.light_SE._Change('')
         # self.light_NE._Change('')
 
+    def Car(self):
+        pass
+
     def backgound(self):
         self.title('traffic_lights')
         self.geometry(f"{self.size * self.UNIT}x{self.size * self.UNIT}")
@@ -205,24 +208,6 @@ class traffic(tk.Tk,object):
         self.Cross_street()
         self.light()
         self.canvas.pack()
-
-
-        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
-
-        for x in range(100):
-            time.sleep(1)
-            print(f"{x%3}")
-            self.light_NW.Change()
-            # self.light_SW._Change('green')
-            # self.light_SE._Change('red')
-            # self.light_NE._Change('green')
-
-            # for i in car_list:
-            #     # print(f'carID: {i[1]} ', end = '')
-            #     # i[0].show()
-            #     i[0].move()
-            self.canvas.update()
-        #     print()
 
     def _ClosestCar(self,car_list):
         """
@@ -261,7 +246,9 @@ class TrafficSimulator(traffic):
 
     def step(self, action):
         """
-        output is like:
+        input:
+        action swich if the agent want to change the light, stay otherwise.
+        output:
         observation, reward, done, info
         observation is like:
         [
@@ -272,9 +259,25 @@ class TrafficSimulator(traffic):
             Light delay # 0-3
         ]
         reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
+        done if game is done
+        info is the total number of queueing cars, which can be ploted in the report graph.
         """
         pass
+    
+    def test_debug(self):
+        
+        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
 
+        for x in range(100):
+            time.sleep(1)
+            self.light_NW.Change()
+
+            for i in car_list:
+                print(f'carID: {i[1]} ', end = '')
+                i[0].show()
+                i[0].move()
+            self.canvas.update()
+            print()
 
 
 
@@ -282,4 +285,5 @@ if __name__ == '__main__':
     # env = traffic_lights()
     # env.Cross_street()
     env = TrafficSimulator()
+    env.test_debug()
     env.mainloop()
