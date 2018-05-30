@@ -113,17 +113,17 @@ class Vehicle:
 
     def cal_cord_after_move(self):
         if self.direction == 'right':
-            self.sp.x += self.unit                          #left
-            self.ep.x += self.unit
+            self.sp.x += self.speed                          #left
+            self.ep.x += self.speed
         elif self.direction == 'down':
-            self.sp.y += self.unit                          #down
-            self.ep.y += self.unit
+            self.sp.y += self.speed                          #down
+            self.ep.y += self.speed
         elif self.direction == 'left':
-            self.sp.x -= self.unit                          #right
-            self.ep.x -= self.unit
+            self.sp.x -= self.speed                          #right
+            self.ep.x -= self.speed
         elif self.direction == 'up':
-            self.sp.y -= self.unit                          #up
-            self.ep.y -= self.unit
+            self.sp.y -= self.speed                          #up
+            self.ep.y -= self.speed
         else:
             pass
 
@@ -133,13 +133,13 @@ class Vehicle:
     def move(self):
         self.moveState = True
         if self.direction == 'left':
-            self.can.move(self.can_id, -self.unit, 0)      #left
+            self.can.move(self.can_id, -self.speed, 0)      #left
         elif self.direction == 'down':
-            self.can.move(self.can_id, 0, self.unit)      #down
+            self.can.move(self.can_id, 0, self.speed)      #down
         elif self.direction == 'right':
-            self.can.move(self.can_id, self.unit, 0)     #right
+            self.can.move(self.can_id, self.speed, 0)     #right
         elif self.direction == 'up':
-            self.can.move(self.can_id, 0, -self.unit)     #up
+            self.can.move(self.can_id, 0, -self.speed)     #up
         else:
             pass
 
