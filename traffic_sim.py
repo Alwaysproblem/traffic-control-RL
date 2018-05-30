@@ -221,7 +221,7 @@ class traffic(tk.Tk,object):
         # for car in origin_list:
         #     if car.Dis_light >= 0:
         #         new_list.append(car)
-        sorted(new_list,key = sortcar)
+        new_list.sort(key = sortcar)
         # print(new_list)
         return new_list[0].Dis_light
     
