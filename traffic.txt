@@ -32,7 +32,7 @@ that a contiguous line of cars at a stop sign are stopped.
 For the reinforcement learner, the following MDP specification and Q
 learning parameters can be used;
 
- 
+
 State = 
 closest car position from intersection for road 1 (0-8, 9 if no cars) X
 closest car position from intersection for road 2 (0-8, 9 if no cars X

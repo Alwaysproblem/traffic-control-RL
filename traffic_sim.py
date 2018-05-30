@@ -253,7 +253,12 @@ class traffic(tk.Tk,object):
         origin_list = list(car_list)
         new_list = [car for car in origin_list if car.Dis_light >= 0]
         new_list.sort(key = sortcar)
-        return new_list[0].Dis_light,len([car for car in new_list if car.moveState == False])
+        if len(new_list) == 0:
+            position = 9
+        else:
+            position = new_list[0].Dis_light if new_list[0].Dis_light < 9 else 9
+
+        return  position, len([car for car in new_list if car.moveState == False])
     
     # def ClosestCar(self):
     #     return self._ClosestCar(self.car_list)
@@ -276,13 +281,26 @@ class traffic(tk.Tk,object):
 class TrafficSimulator(traffic):
     def __init__(self):
         super(TrafficSimulator, self).__init__()
-        self.action = ['switch', 'stay']
+        self.action = ['stay', 'switch']
         self.n_action = len(self.action)
         self.time_stamp = 0
         self.backgound()
+        self.light_NW._Change('red')
+        self.light_SE._Change('red')
+        self.light_NE._Change('green')
+        self.light_SW._Change('green')
 
     def restart(self):
-        pass
+        self.canvas.update()
+        time.sleep(0.5)
+        self.light_NW._Change('red')
+        self.light_SE._Change('red')
+        self.light_NE._Change('green')
+        self.light_SW._Change('green')
+        for i in self.car_list:
+            i.can.delete(i.can_id)
+        
+        return [9, 9, 9, 9, "red", "green", "red", "green", 0]
 
     def render(self):
         self.canvas.update()
@@ -294,7 +312,7 @@ class TrafficSimulator(traffic):
     def step(self, action):
         """
         input:
-        action swich if the agent want to change the light, stay otherwise.
+        action swich (1) if the agent want to change the light, stay (0) otherwise.
         output:
         observation, reward, done, info
         observation is like:
@@ -309,9 +327,39 @@ class TrafficSimulator(traffic):
         done if game is done
         info is the total number of queueing cars, which can be ploted in the report graph.
         """
-        pass
-    
+        self.random_create_car()
+        if action == 1:
+            for i in self.lightList:
+                i.Change()
+            self.car_start_move()
+        else:
+            for i in self.lightList:
+                i.ChangeDelay()
+            self.car_start_move()
+        
+        o_list1 = self.car_filter('left')
+        o_list2 = self.car_filter('up')
+        o_list3 = self.car_filter('right')
+        o_list4 = self.car_filter('down')
+
+        clost1, Qnum1= self._ClosestCar(o_list1)
+        clost2, Qnum2= self._ClosestCar(o_list2)
+        clost3, Qnum3= self._ClosestCar(o_list3)
+        clost4, Qnum4= self._ClosestCar(o_list4)
+
+        
+
+        info = sum([Qnum1,Qnum2,Qnum3,Qnum4])
+        lightState = [ls.lightState for ls in self.lightList]
+        if info == 0:
+            reward = 0
+        else:
+            reward = -1
+
+        return [clost1,clost2,clost3,clost4] + lightState + [self.light_NE.Delaytime], reward, None, info
+
     def test_debug(self):
+        
         self.light_NW._Change('red')
         self.light_SE._Change('red')
         self.light_NE._Change('green')
@@ -325,9 +373,27 @@ class TrafficSimulator(traffic):
             time.sleep(0.2)
             self.canvas.update()
 
+def update():
+    for i in range(5):
+        observation = env.restart()
+        print(f"the start state {observation}")
+        for j in range(1000):
+
+            action = random.randint(0,1)
+            print(f"the action is {env.action[action]}")
+
+            observation, reward, done, info = env.step(action)
+            print(observation, " ", reward," ", done," ", info)
+            
+            env.render()
+            time.sleep(3)
+
+        print(f"{j} times finished.")
+
 
 
 if __name__ == '__main__':
     env = TrafficSimulator()
-    env.test_debug()
+    # env.test_debug()
+    env.after(500, func = update)
     env.mainloop()
