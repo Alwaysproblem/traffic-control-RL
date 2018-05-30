@@ -299,8 +299,9 @@ class TrafficSimulator(traffic):
         self.light_SW._Change('green')
         for i in self.car_list:
             i.can.delete(i.can_id)
-        
-        return [9, 9, 9, 9, "red", "green", "red", "green", 0]
+        self.car_list = []
+        # return [9, 9, 9, 9, "red", "green", "red", "green", 0]
+        return [9, 9, "red", "green", "red", "green", 0]
 
     def render(self):
         self.canvas.update()
@@ -347,7 +348,8 @@ class TrafficSimulator(traffic):
         clost3, Qnum3= self._ClosestCar(o_list3)
         clost4, Qnum4= self._ClosestCar(o_list4)
 
-        
+        clost_R1 = min((clost1,clost3))
+        clost_R2 = min((clost2,clost4))
 
         info = sum([Qnum1,Qnum2,Qnum3,Qnum4])
         lightState = [ls.lightState for ls in self.lightList]
@@ -356,7 +358,8 @@ class TrafficSimulator(traffic):
         else:
             reward = -1
 
-        return [clost1,clost2,clost3,clost4] + lightState + [self.light_NE.Delaytime], reward, None, info
+        # return [clost1,clost2,clost3,clost4] + lightState + [self.light_NE.Delaytime], reward, None, info
+        return [clost_R1, clost_R2] + lightState + [self.light_NE.Delaytime], reward, None, info
 
     def test_debug(self):
         

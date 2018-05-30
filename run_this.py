@@ -1,16 +1,17 @@
 from QLearning import QL
 from traffic_sim import TrafficSimulator
 
-# from sys import platform as sys_pf
-# if sys_pf == 'darwin':
-#     import matplotlib
-#     matplotlib.use("TkAgg")
-# import matplotlib.pyplot as plt
+from sys import platform as sys_pf
+if sys_pf == 'darwin':
+    import matplotlib
+    matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
 
 
 def run():
-    # plt.figure()
-    for i in range(20):
+    sum_info_l = []
+    train_times = 10000
+    for i in range(train_times):
         observation = env.restart()
         q.initial_State(observation)
         sum_info = 0
@@ -18,9 +19,18 @@ def run():
             # env.render()
             _, info = q.learning(env_step = env.step)
             sum_info += info
+        sum_info_l.append(sum_info)
         # plt.plot(i, sum_info, 'g-*')
-        print(f"({sum_info}, {i})")
-    # plt.show()
+        # ax.plot(i, sum_info, color='r', linewidth=1, alpha=0.6)
+        # print(f"({sum_info}, {i})")
+
+    plt.figure('Performance Graph')
+    ax = plt.gca()
+    ax.set_xlabel('time')
+    ax.set_ylabel('the number of queueing cars')
+    x = [i for i in range(train_times)]
+    ax.plot(x, sum_info_l, color='r', linewidth=1, alpha=0.6)
+    plt.show()
 
 
 
