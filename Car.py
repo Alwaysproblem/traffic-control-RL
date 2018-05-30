@@ -17,6 +17,7 @@ class Vehicle:
         self.road = RoadWidth
         self.can = Canvas
         self.unit = UNIT
+        self.speed = self.unit
         intial_fun = {
             'up': self.up,
             'down': self.down,
@@ -142,7 +143,7 @@ class Vehicle:
         else:
             pass
 
-        self.can.tag_raise(self.can_id)
+        # self.can.tag_raise(self.can_id)
         self.cal_cord_after_move()
         self.cal_distance_from_light()
         self.step_num += 1

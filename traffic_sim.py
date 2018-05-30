@@ -38,6 +38,7 @@ class traffic(tk.Tk,object):
             self.canvas,
             self.UNIT,
             'NW',
+            'red',
             'L'
         )
         self.light_SW = light(
@@ -46,6 +47,7 @@ class traffic(tk.Tk,object):
             self.canvas,
             self.UNIT,
             'SW',
+            'green',
             'L'
             )
         self.light_SE = light(
@@ -54,6 +56,7 @@ class traffic(tk.Tk,object):
             self.canvas,
             self.UNIT,
             'SE',
+            'red',
             'R'
             )
         self.light_NE = light(
@@ -62,6 +65,7 @@ class traffic(tk.Tk,object):
             self.canvas,
             self.UNIT,
             'NE',
+            'green',
             'R'
             )
         self.lightList = (self.light_NW, self.light_SW, self.light_SE, self.light_NE)
@@ -185,15 +189,16 @@ class traffic(tk.Tk,object):
         self.canvas.pack()
 
 
-        # car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
+        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
 
         for _ in range(100):
             time.sleep(1)
-            self.light_NE.Change()
-        #     for i in car_list:
-        #         print(f'carID: {i[1]} ', end = '')
-        #         i[0].show()
-        #         i[0].move()
+            # self.light_NE.Change()
+            self.light_NE._Change('green')
+            for i in car_list:
+                # print(f'carID: {i[1]} ', end = '')
+                # i[0].show()
+                i[0].move()
             self.canvas.update()
         #     print()
 
@@ -201,17 +206,21 @@ class traffic(tk.Tk,object):
         pass
 
     def closestcar(self,car_list):
+
+        def sortcar(vehicle):
+            return vehicle.Dis_light
+
         origin_list = list(car_list)
         new_list = [car for car in origin_list if car.Dis_light >= 0]
         # for car in origin_list:
         #     if car.Dis_light >= 0:
         #         new_list.append(car)
-        sorted(new_list,key = self.sortcar)
+        sorted(new_list,key = sortcar)
         # print(new_list)
         return new_list[0].Dis_light
     
-    def sortcar(self,vehicle):
-        return vehicle.Dis_light
+    # def sortcar(self,vehicle):
+    #     return vehicle.Dis_light
 
 
 class TrafficSimulator(traffic):

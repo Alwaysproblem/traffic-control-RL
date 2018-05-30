@@ -108,7 +108,7 @@ class light:
                 'red' : 'green',
                 'green': 'red'
             }
-            self._Change(col_dir[self.LightState])
+            self._Change(col_dir[self.lightState])
         self.ChangeDelay()
 
 
