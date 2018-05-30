@@ -3,6 +3,7 @@ import tkinter as tk
 from queue import PriorityQueue as PQ
 import random as rd
 from Point import point
+
 # C = tk.Canvas(bg = "white", height = 100, width = 100)
 
 # a = Vehicle('left', C)
@@ -21,9 +22,10 @@ from Point import point
 # p = myPQ(100)
 
 list_p = [point(rd.randint(1,10), rd.randint(1,10)) for _ in range(10)]
+lis_C = [ Vehicle() for _ in range(10)]
 
 for i in list_p:
-    i.show()
+    i.show() 
 
 print()
 

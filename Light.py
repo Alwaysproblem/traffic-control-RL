@@ -28,7 +28,8 @@ class light:
         self.ID = ID
         self.lightState = init_col
         self.EnaChange = True
-        self.Delay = DELAY
+        self.Delay = DELAY - 1
+        self.Delaytime = self.Delay
 
 
     def cal_R_cod(self):
@@ -93,11 +94,11 @@ class light:
         return self.lightState
 
     def ChangeDelay(self):
-        if self.Delay == 0 :
-            self.Delay = DELAY
+        if self.Delaytime <= 0 :
+            self.Delaytime = self.Delay
             self.EnaChange = True
         else:
-            self.Delay -= 1
+            self.Delaytime -= 1
             self.EnaChange = False
 
     def Change(self):
