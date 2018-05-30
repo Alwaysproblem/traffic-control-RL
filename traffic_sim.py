@@ -1,3 +1,21 @@
+"""
+    Two actions: decide to switch or not.
+
+    Reward -1.0 if a car is stopped at a red light on either road, zero
+    otherwise.
+
+    Optimise discounted sum of future reward.
+
+    Use discount factor: gamma = .9
+
+    Use learning rate: alpha = .1
+
+    Epsilon-greedy exploration 10%
+
+    Plot and compare performance measures for both the fixed switching and
+    learnt policies. 
+"""
+
 from Car import Vehicle
 from Light import light
 from Point import point
@@ -206,8 +224,12 @@ class traffic(tk.Tk,object):
             self.canvas.update()
         #     print()
 
-    def closestcar(self,car_list):
-
+    def _ClosestCar(self,car_list):
+        """
+        output:
+        the closest car position
+        the number of queueing car
+        """
         def sortcar(vehicle):
             return vehicle.Dis_light
 
@@ -216,7 +238,8 @@ class traffic(tk.Tk,object):
         new_list.sort(key = sortcar)
         return new_list[0].Dis_light,len([car for car in new_list if car.moveState == False])
     
-
+    def ClosestCar(self):
+        return self._ClosestCar(self.car_list)
 
 class TrafficSimulator(traffic):
     def __init__(self):
@@ -232,11 +255,24 @@ class TrafficSimulator(traffic):
     def render(self):
         self.canvas.update()
         time.sleep(0.5)
-        self.time_stamp += 1
-        if self.time_stamp >= 1000:
-            self.Exit()
+        # self.time_stamp += 1
+        # if self.time_stamp >= 1000:
+        #     self.Exit()
 
     def step(self, action):
+        """
+        output is like:
+        observation, reward, done, info
+        observation is like:
+        [
+            closest car pos for Road 1, # 0-8
+            closest car pos for Road 2, # 0-8
+            Road 1 light state, # 0 means red, 1 if light is green
+            Road 2 light state, # 0 means red, 1 if light is green
+            Light delay # 0-3
+        ]
+        reward -1.0 if a car is stopped at a red light on either road, zero otherwise.
+        """
         pass
 
 
