@@ -206,11 +206,6 @@ class traffic(tk.Tk,object):
             self.canvas.update()
         #     print()
 
-
-
-    def Car(self):
-        pass
-
     def closestcar(self,car_list):
 
         def sortcar(vehicle):
@@ -218,15 +213,9 @@ class traffic(tk.Tk,object):
 
         origin_list = list(car_list)
         new_list = [car for car in origin_list if car.Dis_light >= 0]
-        # for car in origin_list:
-        #     if car.Dis_light >= 0:
-        #         new_list.append(car)
         new_list.sort(key = sortcar)
-        # print(new_list)
         return new_list[0].Dis_light
     
-    # def sortcar(self,vehicle):
-    #     return vehicle.Dis_light
 
 
 class TrafficSimulator(traffic):
@@ -241,7 +230,11 @@ class TrafficSimulator(traffic):
         pass
 
     def render(self):
-        pass
+        self.canvas.update()
+        time.sleep(0.5)
+        self.time_stamp += 1
+        if self.time_stamp >= 1000:
+            self.Exit()
 
     def step(self, action):
         pass
