@@ -19,11 +19,12 @@ class light:
         self.mode = length >= width        # if length >= width means the light should be horizontal.
         self.changeFlag = False
         self.ep = point(self.sp.x + self.length, self.sp.y + self.width)
-        self.red = None
-        self.yellow = None
-        self.green = None
+        self.redID = None
+        self.yellowID = None
+        self.greenID = None
         self.can = Canvas
         self.ID = ID
+        self.lightState = None
 
 
     def cal_R_cod(self):
@@ -62,7 +63,7 @@ class light:
         return self.changeFlag
 
     def draw(self):
-        self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
+        bg = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
         point_a,point_b = self.cal_R_cod()
         self.red = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
         point_a,point_b = self.cal_Y_cod()
@@ -72,13 +73,23 @@ class light:
 
     def _Change(self, color):
         self.changeFlag = not self.changeFlag
+        self.lightState = color
         dic = {
-            'red': self.red,
-            'yellow': self.yellow,
-            'green': self.green
+            'red': self.redID,
+            'yellow': self.yellowID,
+            'green': self.greenID
         }
         for i in dic.keys():
             if i == color:
                 self.can.itemconfig(dic[i], fill = color)
             else:
                 self.can.itemconfig(dic[i], fill = 'gray')
+                self.lightState[self.lightState.index(i)]
+
+    def Change(self):
+        pass
+
+
+
+if __name__ == '__main__':
+    pass

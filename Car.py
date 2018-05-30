@@ -5,18 +5,14 @@ class Vehicle:
         dire = {
             'up': 'down',
             'down': 'up',
-            'left': 'left',
-            'right': 'right'
+            'left': 'right',
+            'right': 'left'
         }
         self.mapSize = size
         self.loc = location                     # the car initial location
         self.direction = dire[self.loc]         # the direction of moving
         self.sp = point(0, 0)                   # start point 
         self.ep = point(0, 0)                       # end point
-        # self.x1 = 0
-        # self.x2 = 0
-        # self.y1 = 0
-        # self.y2 = 0
         self.can_id = None
         self.road = RoadWidth
         self.can = Canvas
@@ -33,12 +29,14 @@ class Vehicle:
             'left': 'blue4',
             'right': 'deep pink'
         }
-        intial_fun[self.loc]()
-        self.create()
         self.step_num = 1  # if step number > 100 delete the car from canvas.
         self.moveState = True
         self.all_light = all_light
         self.Dis_light = None
+        # intial function:
+        intial_fun[self.loc]()
+        self.create()
+        self.cal_distance_from_light()
     
     def up(self):
         """ calculate the postion of the car from the upper bound."""
@@ -80,6 +78,7 @@ class Vehicle:
     def create(self):
         if self.can != None:
             self.can_id = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = self.color[self.loc])
+            
 
     def getStep(self):
         return self.step_num
@@ -89,16 +88,36 @@ class Vehicle:
             self.can.delete(self.can_id)
 
     def cal_distance_from_light(self):
-        pass
+        light_dic = {
+            'left': 'SE',
+            'right': 'NW',
+            'up': 'SW',
+            'down': 'NE'
+        }
+        filt_light = [light for light in self.all_light if light.ID == light_dic[self.direction]]
+        if len(filt_light) != 1:
+            print(f'there will be something not right\nhere is the {filt_light}')
+            return
+
+        if self.direction == 'left':
+            self.Dis_light = (self.sp.x - filt_light[0].ep.x) / self.unit
+        elif self.direction == 'down':
+            self.Dis_light = (filt_light[0].sp.y - self.ep.y) / self.unit
+        elif self.direction == 'right':
+            self.Dis_light = (filt_light[0].sp.x - self.ep.x) / self.unit
+        elif self.direction == 'up':
+            self.Dis_light = (self.sp.y - filt_light[0].ep.y) / self.unit
+        else:
+            pass
 
     def cal_cord_after_move(self):
-        if self.direction == 'left':
+        if self.direction == 'right':
             self.sp.x += self.unit                          #left
             self.ep.x += self.unit
         elif self.direction == 'down':
             self.sp.y += self.unit                          #down
             self.ep.y += self.unit
-        elif self.direction == 'right':
+        elif self.direction == 'left':
             self.sp.x -= self.unit                          #right
             self.ep.x -= self.unit
         elif self.direction == 'up':
@@ -113,16 +132,19 @@ class Vehicle:
     def move(self):
         self.moveState = True
         if self.direction == 'left':
-            self.can.move(self.can_id, self.unit, 0)      #left
+            self.can.move(self.can_id, -self.unit, 0)      #left
         elif self.direction == 'down':
             self.can.move(self.can_id, 0, self.unit)      #down
         elif self.direction == 'right':
-            self.can.move(self.can_id, -self.unit, 0)     #right
+            self.can.move(self.can_id, self.unit, 0)     #right
         elif self.direction == 'up':
             self.can.move(self.can_id, 0, -self.unit)     #up
         else:
             pass
+
+        self.can.tag_raise(self.can_id)
         self.cal_cord_after_move()
+        self.cal_distance_from_light()
         self.step_num += 1
         self.distroy()
 
@@ -131,6 +153,7 @@ class Vehicle:
 
     def show(self):
         print(f"this car location is ({self.sp.x}, {self.sp.y}) and ({self.ep.x}, {self.ep.y})")
+        print(f"the distance from light is {self.Dis_light} UNIT.")
 
 
 if __name__ == '__main__':
