@@ -1,8 +1,10 @@
 from Point import point
 import copy
 
+DELAY = 3
+
 class light:
-    def __init__(self, source_position, length, width, Canvas, UNIT, ID, direction = 'L'):
+    def __init__(self, source_position, length, width, Canvas, UNIT, ID, init_col, direction = 'L'):
         """ 
         source position should be point class.
         derection should be :
@@ -24,7 +26,9 @@ class light:
         self.greenID = None
         self.can = Canvas
         self.ID = ID
-        self.lightState = None
+        self.lightState = init_col
+        self.EnaChange = True
+        self.Delay = DELAY
 
 
     def cal_R_cod(self):
@@ -72,7 +76,7 @@ class light:
         self.green = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
 
     def _Change(self, color):
-        self.changeFlag = not self.changeFlag
+        # self.changeFlag = not self.changeFlag
         self.lightState = color
         dic = {
             'red': self.redID,
@@ -84,10 +88,28 @@ class light:
                 self.can.itemconfig(dic[i], fill = color)
             else:
                 self.can.itemconfig(dic[i], fill = 'gray')
-                self.lightState[self.lightState.index(i)]
+
+    def LightState(self):
+        return self.lightState
+
+    def ChangeDelay(self):
+        if self.Delay == 0 :
+            self.Delay = DELAY
+            self.EnaChange = True
+        else:
+            self.Delay -= 1
+            self.EnaChange = False
 
     def Change(self):
-        pass
+        if self.EnaChange == False:
+            pass
+        else:
+            col_dir = {
+                'red' : 'green',
+                'green': 'red'
+            }
+            self._Change(col_dir[self.LightState])
+        self.ChangeDelay()
 
 
 

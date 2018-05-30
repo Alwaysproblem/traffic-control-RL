@@ -99,14 +99,14 @@ class traffic(tk.Tk,object):
         self.menubar=tk.Menu(self)
 
         self.filemenu=tk.Menu(self.menubar,tearoff=0)
-        self.filemenu.add_command(label="Start",command=self.Car)
-        self.filemenu.add_command(label="Exit",command=self.Exit)
-        self.menubar.add_cascade(label="Menu",menu=self.filemenu)
+        self.filemenu.add_command(label = "Start",command = self.Car)
+        self.filemenu.add_command(label = "Exit",command = self.Exit)
+        self.menubar.add_cascade(label = "Menu",menu = self.filemenu)
 
         self.setmenu = tk.Menu(self.menubar,tearoff=0)
-        self.setmenu.add_command(label="Set",command=self.build_set_menu)
-        self.menubar.add_cascade(label="Control",menu=self.setmenu)
-        self.config(menu=self.menubar)
+        self.setmenu.add_command(label = "Set", command = self.build_set_menu)
+        self.menubar.add_cascade(label = "Control", menu = self.setmenu)
+        self.config(menu = self.menubar)
     
     def Cross_street(self):    # build the street
         # self.canvas=tk.Canvas(self,bg="white",height = self.size * self.UNIT, width = self.size * self.UNIT)
@@ -184,16 +184,18 @@ class traffic(tk.Tk,object):
         self.light()
         self.canvas.pack()
 
-        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
+
+        # car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
 
         for _ in range(100):
-            time.sleep(0.5)
-            for i in car_list:
-                print(f'carID: {i[1]} ', end = '')
-                i[0].show()
-                i[0].move()
+            time.sleep(1)
+            self.light_NE.Change()
+        #     for i in car_list:
+        #         print(f'carID: {i[1]} ', end = '')
+        #         i[0].show()
+        #         i[0].move()
             self.canvas.update()
-            print()
+        #     print()
 
     def Car(self):
         pass

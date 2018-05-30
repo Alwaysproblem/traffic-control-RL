@@ -20,15 +20,15 @@ from Point import point
 
 # p = myPQ(100)
 
-list_p = [point(rd.randint(1,10), rd.randint(1,10)) for _ in range(1000)]
+list_p = [point(rd.randint(1,10), rd.randint(1,10)) for _ in range(10)]
 
 for i in list_p:
     i.show()
 
 print()
 
-def sort_key(point):
-    return point.x
+def sort_key(x):
+    return x.y
 
 list_p.sort(key = sort_key)
 
