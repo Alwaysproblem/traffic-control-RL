@@ -69,11 +69,11 @@ class light:
     def draw(self):
         bg = self.can.create_rectangle(self.sp.x, self.sp.y, self.ep.x, self.ep.y, fill = 'gray')
         point_a,point_b = self.cal_R_cod()
-        self.red = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
+        self.redID = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'red')
         point_a,point_b = self.cal_Y_cod()
-        self.yellow = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'yellow')
+        self.yellowID = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'yellow')
         point_a,point_b = self.cal_G_cod()
-        self.green = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
+        self.greenID = self.can.create_oval(point_a.x, point_a.y, point_b.x, point_b.y, fill = 'green')
 
     def _Change(self, color):
         # self.changeFlag = not self.changeFlag
