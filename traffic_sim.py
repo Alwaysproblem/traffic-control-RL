@@ -214,7 +214,7 @@ class traffic(tk.Tk,object):
         origin_list = list(car_list)
         new_list = [car for car in origin_list if car.Dis_light >= 0]
         new_list.sort(key = sortcar)
-        return new_list[0].Dis_light
+        return new_list[0].Dis_light,len([car for car in new_list if car.moveState == False])
     
 
 
