@@ -223,7 +223,7 @@ class traffic(tk.Tk,object):
         #         new_list.append(car)
         new_list.sort(key = sortcar)
         # print(new_list)
-        return new_list[0].Dis_light
+        return new_list[0].Dis_light,len([car for car in new_list if car.moveState == False])
     
     # def sortcar(self,vehicle):
     #     return vehicle.Dis_light

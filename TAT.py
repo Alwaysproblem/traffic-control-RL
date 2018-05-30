@@ -46,9 +46,11 @@ env = traffic()
 
 
 list_car = [Vehicle('left', env.lightList, env.canvas, env.UNIT, env.size, env.roadLen) for _ in range(10)]
-
+list_car[4].moveState = False
 for i in list_car:
     i.Dis_light = rd.randint(-10, 10)
+    # if i.Dis_light < 0:
+    i.moveState = False
     print(i.Dis_light)
 
 
