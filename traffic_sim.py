@@ -87,17 +87,53 @@ class traffic(tk.Tk,object):
             'R'
             )
         self.lightList = (self.light_NW, self.light_SW, self.light_SE, self.light_NE)
-        self.car_l = Vehicle('left', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_r = Vehicle('right', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_u = Vehicle('up', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
-        self.car_d = Vehicle('down', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        # self.car_l = Vehicle('left', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        # self.car_r = Vehicle('right', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        # self.car_u = Vehicle('up', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+        # self.car_d = Vehicle('down', self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
 
     def Exit(self):
         self.destroy()
 
+    def random_create_car(self):
+        for i in ('left', 'right', 'up', 'down'):
+            if random.random() <= 0.1:
+                car= Vehicle(i, self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
+                self.car_list.append(car)
+    
+    def car_filter(self, position):
+        return [car for car in self.car_list if car.loc == position]
+
+    def car_start_move(self, crash = None):
+        if crash == None:
+            for c in [ car for car in self.car_list if car.step_num < car.mapSize]:
+                if self.check_Red_Stop(c) is True or self.CarCrash(c) is True:
+                    c.stop()
+                else:
+                    c.move()
+        else:
+            pass
+        
+    def check_Red_Stop(self, car):
+        light_direction = {
+            'right': 'NW',
+            'left': 'SE',
+            'up': 'SW',
+            'down': 'NE'
+        }
+        light = [l for l in self.lightList if l.ID == light_direction[car.direction]]
+        if len(light) != 1:
+            print(f"there is something problem in check_Red")
+            return
+        if car.Dis_light == 0 and light[0].lightState == 'red':
+            return True
+        else:
+            return False
+
+    
     def build_set_menu(self):
         j=1
-        speed=['10','20','30','40']
+        speed=['10','20','30','40'] 
         self.Set=tk.Toplevel()
         self.Set.title('Set')
         self.Set.geometry('200x100')
@@ -193,10 +229,6 @@ class traffic(tk.Tk,object):
 
     def light_change(self):     #change the color of lights
         pass
-        # self.light_NW._Change('')
-        # self.light_SW._Change('')
-        # self.light_SE._Change('')
-        # self.light_NE._Change('')
 
     def Car(self):
         pass
@@ -223,8 +255,23 @@ class traffic(tk.Tk,object):
         new_list.sort(key = sortcar)
         return new_list[0].Dis_light,len([car for car in new_list if car.moveState == False])
     
-    def ClosestCar(self):
-        return self._ClosestCar(self.car_list)
+    # def ClosestCar(self):
+    #     return self._ClosestCar(self.car_list)
+
+    def CarCrash(self, car):
+        car_list = self.car_filter(car.loc)
+        car_idx = car_list.index(car)
+        if car_idx == 0:
+            return False
+        else:
+            if car_list[car_idx - 1].moveState == False:
+                if  car.Dis_light - car_list[car_idx - 1].Dis_light <= 1:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+
 
 class TrafficSimulator(traffic):
     def __init__(self):
@@ -265,25 +312,22 @@ class TrafficSimulator(traffic):
         pass
     
     def test_debug(self):
-        
-        car_list = [(self.car_l, 'l'), (self.car_r, 'r'), (self.car_u, 'u'), (self.car_d, 'd')]
-
-        for x in range(100):
-            time.sleep(1)
-            self.light_NW.Change()
-
-            for i in car_list:
-                print(f'carID: {i[1]} ', end = '')
-                i[0].show()
-                i[0].move()
+        self.light_NW._Change('red')
+        self.light_SE._Change('red')
+        self.light_NE._Change('green')
+        self.light_SW._Change('green')
+        for t in range(10000):
+            if t % 24 == 0:
+                for i in self.lightList:
+                    i.Change()
+            self.random_create_car()
+            self.car_start_move()
+            time.sleep(0.2)
             self.canvas.update()
-            print()
 
 
 
 if __name__ == '__main__':
-    # env = traffic_lights()
-    # env.Cross_street()
     env = TrafficSimulator()
     env.test_debug()
     env.mainloop()
