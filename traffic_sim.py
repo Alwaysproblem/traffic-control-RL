@@ -97,7 +97,7 @@ class traffic(tk.Tk,object):
 
     def random_create_car(self):
         for i in ('left', 'right', 'up', 'down'):
-            if random.random() <= 0.1:
+            if random.random() <= 0.3:
                 car= Vehicle(i, self.lightList, self.canvas, self.UNIT, self.size, self.roadLen)
                 self.car_list.append(car)
     
