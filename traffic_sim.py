@@ -21,11 +21,11 @@ class traffic(tk.Tk,object):
         self.car_list = []
         # self.time_stamp = 0
         self.speed = self.UNIT  # initial speed 
-        self.roadLen = 12 # self.UNIT
-        self.size = 100
+        self.roadLen = 3 # self.UNIT
+        self.size = 50
         self.canvas = tk.Canvas(self, bg = "white", height = self.size * self.UNIT, width = self.size * self.UNIT)
-        roadV_light_size = (6, 2)
-        roadH_light_size = (2, 6)
+        roadV_light_size = (6 / 2, 2 / 2)
+        roadH_light_size = (2 / 2, 6 / 2)
 
         self.road_point_NW = point(*((self.size/2 - self.roadLen/2),(self.size/2 - self.roadLen/2)))      # Northwest
         self.road_point_SW = point(*((self.size/2 - self.roadLen/2),(self.size/2 + self.roadLen/2)))       # Southwest
@@ -51,7 +51,7 @@ class traffic(tk.Tk,object):
             'L'
             )
         self.light_SE = light(
-            point(self.road_point_SE.x,self.size/2),
+            point(self.road_point_SE.x, self.size/2 - 1.5),
             *roadH_light_size,
             self.canvas,
             self.UNIT,
@@ -60,7 +60,7 @@ class traffic(tk.Tk,object):
             'R'
             )
         self.light_NE = light(
-            point(self.size/2, self.road_point_NE.y - roadV_light_size[1]),
+            point(self.size/2 - 1.5, self.road_point_NE.y - roadV_light_size[1]),
             *roadV_light_size,
             self.canvas,
             self.UNIT,
@@ -193,14 +193,19 @@ class traffic(tk.Tk,object):
 
         for _ in range(100):
             time.sleep(1)
-            # self.light_NE.Change()
+            self.light_NW._Change('red')
+            self.light_SW._Change('green')
+            self.light_SE._Change('red')
             self.light_NE._Change('green')
-            for i in car_list:
-                # print(f'carID: {i[1]} ', end = '')
-                # i[0].show()
-                i[0].move()
+
+            # for i in car_list:
+            #     # print(f'carID: {i[1]} ', end = '')
+            #     # i[0].show()
+            #     i[0].move()
             self.canvas.update()
         #     print()
+
+
 
     def Car(self):
         pass
