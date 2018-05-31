@@ -12,12 +12,13 @@ import numpy as np
 
 def run():
     sum_info_l = []
-    train_times = 100
+    train_times = 500
+    timestep = 1000
     for i in range(train_times):
         observation = env.restart()
         q.initial_State(observation)
         sum_info = 0
-        for j in range(1000):
+        for j in range(timestep):
             env.render()
             _, info = q.learning(env_step = env.step)
             sum_info += info
@@ -25,7 +26,9 @@ def run():
         # plt.plot(i, sum_info, 'g-*')
         # ax.plot(i, sum_info, color='r', linewidth=1, alpha=0.6)
         # print(f"({sum_info}, {i})")
+
     save_fn = 'data.mat'
+    
     # save_array = np.array([1,2,3,4])
     sio.savemat(save_fn, {'info': np.array(sum_info_l) })
 
@@ -43,7 +46,7 @@ def run():
 
 if __name__ == '__main__':
     env = TrafficSimulator()
-    q = QL([str(i) for i in range(env.n_action)], 0.9, 0.9, 0.1)
+    q = QL([str(i) for i in range(env.n_action)], epsilon = 1 - 0.1, gamma = 0.9, alpha = 0.1)
     # env.after(100,run)
     run()
     env.mainloop()
