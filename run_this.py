@@ -7,22 +7,27 @@ if sys_pf == 'darwin':
     matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
+import scipy.io as sio
+import numpy as np
 
 def run():
     sum_info_l = []
-    train_times = 10000
+    train_times = 100
     for i in range(train_times):
         observation = env.restart()
         q.initial_State(observation)
         sum_info = 0
         for j in range(1000):
-            # env.render()
+            env.render()
             _, info = q.learning(env_step = env.step)
             sum_info += info
         sum_info_l.append(sum_info)
         # plt.plot(i, sum_info, 'g-*')
         # ax.plot(i, sum_info, color='r', linewidth=1, alpha=0.6)
         # print(f"({sum_info}, {i})")
+    save_fn = 'data.mat'
+    # save_array = np.array([1,2,3,4])
+    sio.savemat(save_fn, {'info': np.array(sum_info_l) })
 
     plt.figure('Performance Graph')
     ax = plt.gca()

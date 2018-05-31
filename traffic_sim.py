@@ -106,7 +106,9 @@ class traffic(tk.Tk,object):
 
     def car_start_move(self, crash = None):
         if crash == None:
-            for c in [ car for car in self.car_list if car.step_num < car.mapSize]:
+            self.car_list = [ car for car in self.car_list if car.step_num < car.mapSize]
+            for c in self.car_list:
+            # for c in [ car for car in self.car_list if car.step_num < car.mapSize]:
                 if self.check_Red_Stop(c) is True or self.CarCrash(c) is True:
                     c.stop()
                 else:
@@ -292,7 +294,7 @@ class TrafficSimulator(traffic):
 
     def restart(self):
         self.canvas.update()
-        time.sleep(0.5)
+        # time.sleep(0.5)
         self.light_NW._Change('red')
         self.light_SE._Change('red')
         self.light_NE._Change('green')
@@ -305,7 +307,7 @@ class TrafficSimulator(traffic):
 
     def render(self):
         self.canvas.update()
-        time.sleep(0.5)
+        # time.sleep(0.1)
         # self.time_stamp += 1
         # if self.time_stamp >= 1000:
         #     self.Exit()
@@ -377,7 +379,7 @@ class TrafficSimulator(traffic):
             self.canvas.update()
 
 def update():
-    for i in range(5):
+    for i in range(50):
         observation = env.restart()
         print(f"the start state {observation}")
         for j in range(1000):
@@ -389,7 +391,7 @@ def update():
             print(observation, " ", reward," ", done," ", info)
             
             env.render()
-            time.sleep(3)
+            # time.sleep(3)
 
         print(f"{j} times finished.")
 
