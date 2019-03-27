@@ -80,7 +80,7 @@ class QL:
         action = self.epsilonGreedy(str(self.observation))
 
         try:
-            observation_, reward, done = env_step(int(action))
+            observation_, reward, done, info = env_step(int(action))
         except TypeError:
             print("there is no env.step(action).")
 
@@ -93,7 +93,7 @@ class QL:
 
         self.observation = observation_
 
-        return done
+        return done, info
 
     def acquireState(self, state):
         """acquire state from environment."""
