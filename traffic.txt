@@ -54,26 +54,3 @@ Epsilon-greedy exploration 10%
 
 Plot and compare performance measures for both the fixed switching and
 learnt policies. 
-
-Suggested extensions 
-===============
-1.	Include amber phase in lights
-2.	Include 2-way traffic
-3.	Test different traffic intensities and generating functions
-4.	Vary RL parameters
-5.	Try different state space descriptions
-6.	Try different reward functions eg -1 per car on the grid
-7.	Try different exploration strategies
-8.	Include extra lanes
-9.	Increase intersections to 4
-10.	Improve learning speed with eligibility traces
-11.	Model speed of vehicles and inter-car spacing
-12.	Model lane changing.
-13.	Model the effect of an accident.
-14.	Include proportion of traffic turning at intersections
-15.	Include pedestrians
-16.	Use function approximation eg nearest neighbour or a neural network
-
-
-Reinforcement Learning reference:
-http://www.cs.ualberta.ca/%7Esutton/book/ebook/the-book.html
