@@ -86,10 +86,7 @@ otherwise.
 the psudocode of this project:
 
 > Input:
-> 
-> Environment $E$; Action space $A$; Initial state $s_o$; Reward $\gamma$;
-> 
-> Process:
+>  Environment $E$; Action space $A$; Initial state $s_o$; Reward $\gamma$;
 > 
 > $Q(s, a)=0, \pi(s,a)=\frac{1}{\mid A(s) \mid}$
 > 
